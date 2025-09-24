@@ -68,6 +68,14 @@ local function run_once(cmd_arr)
     end
 end
 
+-- Idle idő percben (itt 5 perc)
+local idle_minutes = 5
+local idle_seconds = idle_minutes * 60
+
+-- xss-lock indítása (xset állítja az idle időt)
+awful.spawn.with_shell("xset s " .. idle_seconds .. " " .. idle_seconds .. "; xss-lock -- /usr/local/bin/safe-lock.sh &")
+
+
 run_once({ "urxvtd", "unclutter -root" }) -- comma-separated entries
 
 -- This function implements the XDG autostart specification
