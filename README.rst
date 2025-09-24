@@ -103,7 +103,7 @@ In case you do not want the Git files, use the following as the second command:
 
 .. code-block:: shell
 
-    mv -bv awesome-copycats/* ~/.config/awesome; rm -rf awesome-copycats
+    mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
 
 Usage
 =====
