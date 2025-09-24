@@ -192,8 +192,11 @@ local myawesomemenu = {
    { "Hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
    { "Manual", string.format("%s -e man awesome", terminal) },
    { "Edit config", string.format("%s -e %s %s", terminal, editor, awesome.conffile) },
-   { "Restart", awesome.restart },
-   { "Quit", function() awesome.quit() end },
+   { "reload cfg", awesome.restart },
+   { "=========", },
+   { "=Logout=", function() awesome.quit() end },
+   { "=Reboot=", "sudo reboot" },
+   { "=Power Off=", "sudo shutdown -h 1" },
 }
 
 awful.util.mymainmenu = freedesktop.menu.build {
