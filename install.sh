@@ -86,26 +86,37 @@ echo "Felhasználó: $USER"
 echo "Felhasználó home: $USER_HOME"
 
 
-# Nano szintaxis kiemelés beállítása
-echo "Nano szintaxis kiemelés beállítása..."
-sudo git clone https://github.com/scopatz/nanorc.git $install_path
 
-#mkdir -p "$USER_HOME/.nano"
-#if [ ! -d "$USER_HOME/.nano/nanorc-files" ]; then
- # git clone https://github.com/scopatz/nanorc.git "$USER_HOME/.nano/nanorc-files"
-#else
- # echo "Nanorc már létezik a $USER_HOME/.nano könyvtárban."
-#fi
-# Felhasználó .nanorc fájlának frissítése
-#echo "include ~/.nano/nanorc-files/*.nanorc" >> "$USER_HOME/.nanorc"
-echo "include $install_path/*.nanorc" >> /etc/nanorc
+echo "Nano szintaxis kiemelés telepítése system-wide..."
 
-# Root számára is beállítjuk a nano szintaxis-kiemelést
-#mkdir -p /root/.nano
-#ln -sf "$USER_HOME/.nano/nanorc-files" /root/.nano/nanorc-files
-#echo "include ~/.nano/nanorc-files/*.nanorc" >> /root/.nanorc
+# System-wide install path
+install_path="/usr/share/nano-syntax-highlighting"
 
-echo "Nano szintaxis kiemelés beállítva!"
+# Ha már létezik, frissítjük, különben klónozzuk
+if [ -d "$install_path" ]; then
+    echo "Nanorc már létezik, frissítés..."
+    sudo git -C "$install_path" pull
+else
+    echo "Nanorc telepítése a $install_path alá..."
+    sudo git clone https://github.com/scopatz/nanorc.git "$install_path"
+fi
+
+# System-wide config (/etc/nanorc)
+if ! grep -q "include $install_path/*.nanorc" /etc/nanorc 2>/dev/null; then
+    echo "include $install_path/*.nanorc" | sudo tee -a /etc/nanorc > /dev/null
+fi
+
+# User config (~/.nanorc)
+if ! grep -q "include $install_path/*.nanorc" "$HOME/.nanorc" 2>/dev/null; then
+    echo "include $install_path/*.nanorc" >> "$HOME/.nanorc"
+fi
+
+# Root config (/root/.nanorc)
+if sudo test ! -f /root/.nanorc || ! sudo grep -q "include $install_path/*.nanorc" /root/.nanorc; then
+    echo "include $install_path/*.nanorc" | sudo tee -a /root/.nanorc > /dev/null
+fi
+
+echo "Nano szintaxis kiemelés telepítve minden user számára!"
 
 
 
@@ -162,30 +173,32 @@ chmod +x /usr/local/bin/safe-lock.sh
 
 echo "Lock script elhelyezése."
 
-echo ".xprofile létrehozàsa..."
-cat <<EOF > ~/.xprofile
-export QT_QPA_PLATFORMTHEME="qt5ct"
-EOF
+echo ".xprofile létrehozása a felhasználó számára..."
+sudo -u "$USERNAME" bash -c "cat <<'EOF' > \"$USER_HOME/.xprofile\"
+export QT_QPA_PLATFORMTHEME=\"qt5ct\"
+EOF"
 
 
 
-# AwesomeWM Copycats konfiguráció telepítése
-echo "AwesomeWM Copycats konfiguráció telepítése..."
+USERNAME=$(logname)
+USER_HOME=$(eval echo "~$USERNAME")
+
+echo "AwesomeWM Copycats konfiguráció telepítése $USERNAME számára..."
 
 cd /tmp
-sudo -u "$USERNAME" git clone --branch Autoinstall --recurse-submodules --remote-submodules --depth 1 -j 2 \
+sudo -u "$USERNAME" -H git clone --branch Autoinstall --recurse-submodules --remote-submodules --depth 1 -j 2 \
   https://github.com/megvadulthangya/awesome-copycats-manjaro.git
 
-# Cél mappa létrehozása
-sudo -u "$USERNAME" mkdir -p "$USER_HOME/.config/awesome"
+# ha sikerült a klónozás
+if [ -d /tmp/awesome-copycats-manjaro ]; then
+  sudo -u "$USERNAME" -H mkdir -p "$USER_HOME/.config/awesome"
+  sudo -u "$USERNAME" -H bash -c "mv -bv /tmp/awesome-copycats-manjaro/{*,.[^.]*} \"$USER_HOME/.config/awesome/\""
+  rm -rf /tmp/awesome-copycats-manjaro
+  echo "Telepítve ide: $USER_HOME/.config/awesome"
+else
+  echo "HIBA: Nem sikerült klónozni a repót!"
+fi
 
-# Átmásolás (git fájlokkal együtt)
-sudo -u "$USERNAME" bash -c "mv -bv /tmp/awesome-copycats-manjaro/{*,.[^.]*} $USER_HOME/.config/awesome/"
-
-# Klónozott repo törlése
-rm -rf /tmp/awesome-copycats-manjaro
-
-echo "AwesomeWM Copycats konfiguráció telepítve: $USER_HOME/.config/awesome"
 
 
 
