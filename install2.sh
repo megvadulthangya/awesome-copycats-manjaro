@@ -177,6 +177,16 @@ else
     echo "rc.lua.template nem található a $USER_HOME/.config/awesome mappában!"
 fi
 
+echo "=== i3lock-fancy javítása (convert → magick convert) ==="
+if [ -f /usr/bin/i3lock-fancy ]; then
+  sudo sed -i 's/\bconvert\b/magick/g' /usr/bin/i3lock-fancy
+  echo "i3lock-fancy sikeresen javítva!"
+else
+  echo "Figyelem: /usr/bin/i3lock-fancy nem található."
+fi
+
+
+
 # --- Rendszer újraindítása ---
 echo "Újraindíthatod a rendszert..."
 #reboot
