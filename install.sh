@@ -87,26 +87,28 @@ echo "Felhasználó home: $USER_HOME"
 
 
 
-# A telepítési útvonal, ahogy a dokumentáció javasolja a system-wide telepítéshez
-install_path="/usr/share/nano-syntax-highlighting"
+set -e
 
-echo "A nanorc syntax highlighting telepítése a következő helyre: $install_path"
+INSTALL_PATH="/usr/share/nano-syntax-highlighting"
 
-# A repository klónozása a megadott helyre. Szükséges a sudo, mert a /usr/share mappába írunk.
-sudo git clone https://github.com/scopatz/nanorc.git "$install_path"
+echo "=== Nano Syntax Highlighting telepítése system-wide ==="
 
-# Ha a klónozás sikeres volt, akkor hozzáadjuk a konfigurációs fájlhoz az include sort.
-if [ $? -eq 0 ]; then
-    echo "A konfiguráció hozzáadása a /etc/nanorc fájlhoz..."
-    # A tee parancsot használjuk, hogy sudo-val is működjön a fájlba írás.
-    echo "include $install_path/*.nanorc" | sudo tee -a /etc/nanorc
-    echo "A telepítés sikeresen befejeződött!"
-else
-    echo "Hiba történt a repository klónozása közben. A telepítés leáll."
-    exit 1
+# repo klónozása, ha még nem létezik
+if [ ! -d "$INSTALL_PATH" ]; then
+    git clone https://github.com/scopatz/nanorc.git "$INSTALL_PATH"
 fi
 
-exit 0
+# backup készítése /etc/nanorc fájlról
+if [ -f /etc/nanorc ]; then
+    cp /etc/nanorc /etc/nanorc.backup.$(date +%F_%H-%M-%S)
+fi
+
+# konfiguráció hozzáadása, ha még nincs benne
+if ! grep -q "include $INSTALL_PATH/*.nanorc" /etc/nanorc 2>/dev/null; then
+    echo "include $INSTALL_PATH/*.nanorc" >> /etc/nanorc
+fi
+
+echo "=== Kész! System-wide szintaxis kiemelés beállítva. ==="
 
 
 
