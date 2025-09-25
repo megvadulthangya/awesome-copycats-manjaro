@@ -199,6 +199,21 @@ else
   echo "HIBA: Nem sikerült klónozni a repót!"
 fi
 
+# rc.lua kezelése
+if [ -f "$HOME/.config/awesome/rc.lua.template" ]; then
+    if [ -f "$HOME/.config/awesome/rc.lua" ]; then
+        backup_file="$HOME/.config/awesome/rc.lua.backup-$(date +%Y%m%d%H%M%S)"
+        cp "$HOME/.config/awesome/rc.lua" "$backup_file"
+        echo "Biztonsági mentés készült: $backup_file"
+        cp "$HOME/.config/awesome/rc.lua.template" "$HOME/.config/awesome/rc.lua"
+        echo "rc.lua felülírva a sablonnal."
+    else
+        cp "$HOME/.config/awesome/rc.lua.template" "$HOME/.config/awesome/rc.lua"
+        echo "rc.lua létrehozva a sablonból."
+    fi
+else
+    echo "rc.lua.template nem található a ~/.config/awesome mappában!"
+fi
 
 
 
