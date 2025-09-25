@@ -165,6 +165,11 @@ chmod +x /usr/local/bin/safe-lock.sh
 
 echo "Lock script elhelyezése."
 
+# először felhasználó változók
+USERNAME=$(logname)
+USER_HOME=$(eval echo "~$USERNAME")
+
+
 sudo -u "$USERNAME" bash -c 'echo ".xprofile létrehozása..." && cat <<EOF > ~/.xprofile
 export QT_QPA_PLATFORMTHEME="qt5ct"
 EOF'
