@@ -87,36 +87,26 @@ echo "Felhasználó home: $USER_HOME"
 
 
 
-echo "Nano szintaxis kiemelés telepítése system-wide..."
-
-# System-wide install path
+# A telepítési útvonal, ahogy a dokumentáció javasolja a system-wide telepítéshez
 install_path="/usr/share/nano-syntax-highlighting"
 
-# Ha már létezik, frissítjük, különben klónozzuk
-if [ -d "$install_path" ]; then
-    echo "Nanorc már létezik, frissítés..."
-    sudo git -C "$install_path" pull
+echo "A nanorc syntax highlighting telepítése a következő helyre: $install_path"
+
+# A repository klónozása a megadott helyre. Szükséges a sudo, mert a /usr/share mappába írunk.
+sudo git clone https://github.com/scopatz/nanorc.git "$install_path"
+
+# Ha a klónozás sikeres volt, akkor hozzáadjuk a konfigurációs fájlhoz az include sort.
+if [ $? -eq 0 ]; then
+    echo "A konfiguráció hozzáadása a /etc/nanorc fájlhoz..."
+    # A tee parancsot használjuk, hogy sudo-val is működjön a fájlba írás.
+    echo "include $install_path/*.nanorc" | sudo tee -a /etc/nanorc
+    echo "A telepítés sikeresen befejeződött!"
 else
-    echo "Nanorc telepítése a $install_path alá..."
-    sudo git clone https://github.com/scopatz/nanorc.git "$install_path"
+    echo "Hiba történt a repository klónozása közben. A telepítés leáll."
+    exit 1
 fi
 
-# System-wide config (/etc/nanorc)
-if ! grep -q "include $install_path/*.nanorc" /etc/nanorc 2>/dev/null; then
-    echo "include $install_path/*.nanorc" | sudo tee -a /etc/nanorc > /dev/null
-fi
-
-# User config (~/.nanorc)
-if ! grep -q "include $install_path/*.nanorc" "$HOME/.nanorc" 2>/dev/null; then
-    echo "include $install_path/*.nanorc" >> "$HOME/.nanorc"
-fi
-
-# Root config (/root/.nanorc)
-if sudo test ! -f /root/.nanorc || ! sudo grep -q "include $install_path/*.nanorc" /root/.nanorc; then
-    echo "include $install_path/*.nanorc" | sudo tee -a /root/.nanorc > /dev/null
-fi
-
-echo "Nano szintaxis kiemelés telepítve minden user számára!"
+exit 0
 
 
 
@@ -173,10 +163,10 @@ chmod +x /usr/local/bin/safe-lock.sh
 
 echo "Lock script elhelyezése."
 
-echo ".xprofile létrehozása a felhasználó számára..."
-sudo -u "$USERNAME" bash -c "cat <<'EOF' > \"$USER_HOME/.xprofile\"
-export QT_QPA_PLATFORMTHEME=\"qt5ct\"
-EOF"
+sudo -u "$USERNAME" bash -c 'echo ".xprofile létrehozása..." && cat <<EOF > ~/.xprofile
+export QT_QPA_PLATFORMTHEME="qt5ct"
+EOF'
+
 
 
 
