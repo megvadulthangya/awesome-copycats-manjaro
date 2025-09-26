@@ -146,6 +146,16 @@ sudo -u "$USERNAME" bash -c "echo '.xprofile létrehozása...' && cat <<EOF >> \
 export QT_QPA_PLATFORMTHEME=\"qt5ct\"
 EOF"
 
+# --- Set flameshot to a conservative color ---
+sudo -u "$USERNAME" mkdir -p "$USER_HOME/.config/flameshot"
+sudo -u "$USERNAME" bash -c "echo 'Set flameshot colors...' && cat <<EOF >> \"$USER_HOME/.config/flameshot/flameshot.ini\"                                                                                                 
+[General]
+contrastOpacity=188
+drawColor=#ff0000
+uiColor=#f5eef8
+EOF"
+
+
 # --- AwesomeWM Copycats ---
 echo "AwesomeWM Copycats konfiguráció telepítése $USERNAME számára..."
 cd /tmp
