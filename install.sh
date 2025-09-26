@@ -142,7 +142,7 @@ chmod +x /usr/local/bin/safe-lock.sh
 echo "Lock script elhelyezve."
 
 # --- .xprofile létrehozása ---
-sudo -u "$USERNAME" bash -c "echo '.xprofile létrehozása...' && cat <<EOF > \"$USER_HOME/.xprofile\"
+sudo -u "$USERNAME" bash -c "echo '.xprofile létrehozása...' && cat <<EOF >> \"$USER_HOME/.xprofile\"
 export QT_QPA_PLATFORMTHEME=\"qt5ct\"
 EOF"
 
