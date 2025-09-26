@@ -49,7 +49,7 @@ install_aur() {
 
 # --- Repo csomagok ---
 REPO_PKGS=(
-  dmenu rofi picom scrot unclutter xorg-xbacklight slock alsa-utils
+  dmenu rofi flameshot picom scrot unclutter xorg-xbacklight alsa-utils
   mpd mpc playerctl xorg-fonts-misc ttf-roboto woff2-font-awesome
   arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock
 )
