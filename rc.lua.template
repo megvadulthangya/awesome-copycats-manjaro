@@ -555,7 +555,7 @@ globalkeys = mytable.join(
         function () awful.spawn.with_shell("playerctl previous") end,
         {description = "previous track", group = "media"}),
 
-    awful.key({}, "XF86Eject",
+    awful.key({"Shift"}, "XF86Eject",
         function () awful.spawn.with_shell("playerctl stop") end,
         {description = "stop track", group = "media"}),
 
