@@ -51,7 +51,7 @@ install_aur() {
 REPO_PKGS=(
   dmenu rofi flameshot picom scrot unclutter xorg-xbacklight alsa-utils
   mpd mpc playerctl xorg-fonts-misc ttf-roboto woff2-font-awesome
-  arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock
+  arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock network-manager-applet
 )
 
 echo "Repo csomagok telepítése..."
