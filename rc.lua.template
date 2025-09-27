@@ -83,6 +83,8 @@ run_once({
 -- Starts the LXQt PolicyKit authentication agent. This agent handles privilege requests, 
 -- providing the graphical password prompt for tasks requiring system administrator permissions.
 	"lxqt-policykit-agent",
+--Starts the mate Policykit authentication agent.
+--	"/usr/lib/mate-polkit/polkit-mate-authentication-agent-1",
 -- Starts the Legacy gnome Polkit authentication agent to handle privilege requests (e.g., password prompt for system changes).
   --"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
 -- This line would start the KDE Polkit authentication agent, an alternative to polkit-gnome-au (used above) for handling privilege escalation requests.
