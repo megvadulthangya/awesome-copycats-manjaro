@@ -106,7 +106,7 @@ install_repo "${REPO_PKGS[@]}"
 
 # --- AUR csomagok ---
 AUR_PKGS=(
-  lain-git awesome-git awesome-freedesktop-git tilix-git tamzen-font i3lock-fancy-git
+  lain-git awesome-git awesome-freedesktop-git tilix-git tamzen-font i3lock-fancy-git grayjay-bin
 )
 
 echo "AUR csomagok telepítése..."
