@@ -222,12 +222,12 @@ fi
 if [ -f "$USER_HOME/.config/awesome/rc.lua.template" ]; then
     if [ -f "$USER_HOME/.config/awesome/rc.lua" ]; then
         backup_file="$USER_HOME/.config/awesome/rc.lua.backup-$(date +%Y%m%d%H%M%S)"
-        cp "$USER_HOME/.config/awesome/rc.lua" "$backup_file"
+        sudo -u "$USERNAME" -H cp "$USER_HOME/.config/awesome/rc.lua" "$backup_file"
         echo "Biztonsági mentés készült: $backup_file"
-        cp "$USER_HOME/.config/awesome/rc.lua.template" "$USER_HOME/.config/awesome/rc.lua"
+        sudo -u "$USERNAME" -H cp "$USER_HOME/.config/awesome/rc.lua.template" "$USER_HOME/.config/awesome/rc.lua"
         echo "rc.lua felülírva a sablonnal."
     else
-        cp "$USER_HOME/.config/awesome/rc.lua.template" "$USER_HOME/.config/awesome/rc.lua"
+        sudo -u "$USERNAME" -H cp "$USER_HOME/.config/awesome/rc.lua.template" "$USER_HOME/.config/awesome/rc.lua"
         echo "rc.lua létrehozva a sablonból."
     fi
 else
