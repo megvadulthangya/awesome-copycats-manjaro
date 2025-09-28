@@ -80,6 +80,8 @@ run_once({
 -- The 'safe-lock.sh' script is executed when the system locks, and the xss-lock setup
 -- will prevent locking while media (MPV, Grayjay, browser) is playing.
 	"xset s " .. idle_seconds .. " " .. idle_seconds .. "; xss-lock -- /usr/local/bin/safe-lock.sh",
+--pamac updater desktop icon
+    "GDK_BACKEND=x11 pamac-tray",
 -- Starts the LXQt PolicyKit authentication agent. This agent handles privilege requests, 
 -- providing the graphical password prompt for tasks requiring system administrator permissions.
 	"lxqt-policykit-agent",
