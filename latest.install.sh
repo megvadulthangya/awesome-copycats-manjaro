@@ -126,7 +126,7 @@ set -e
 # ------------------------------------------------------
 # Adi1090x Rofi témák telepítése
 # ------------------------------------------------------
-echo "[INFO] Adi1090x Rofi témák telepítése..."
+echo "[INFO] Rofi témák telepítése a megvadulthangya forkjából..."
 
 # Ellenőrizzük, hogy a scriptet sudo-val futtatták-e, és létezik-e a SUDO_USER
 if [ -n "$SUDO_USER" ]; then
@@ -141,7 +141,9 @@ if [ -n "$SUDO_USER" ]; then
         cd /tmp;
         # Ha már létezik a mappa, töröljük, hogy tiszta telepítés legyen
         rm -rf rofi;
-        git clone --depth=1 https://github.com/adi1090x/rofi.git;
+        # ⬇️ EZT A SORT MÓDOSÍTOTTAM:
+        git clone --depth=1 -b my-awesome-config https://github.com/megvadulthangya/Awesome-rofi.git rofi;
+        # ⬆️ EZT A SORT MÓDOSÍTOTTAM. Itt már a /tmp/rofi mappában leszünk
         cd rofi;
         
         # A setup.sh logikáját itt hajtjuk végre közvetlenül
@@ -156,8 +158,8 @@ if [ -n "$SUDO_USER" ]; then
         ROFI_DIR="$HOME/.config/rofi";
         # Biztonsági mentés készítése a meglévő Rofi konfigurációról
         if [[ -d "$ROFI_DIR" ]]; then
-            echo "[INFO] Meglévő Rofi konfiguráció biztonsági mentése ide: ${ROFI_DIR}.${USER}";
-            mv "$ROFI_DIR" "${ROFI_DIR}.${USER}";
+            echo "[INFO] Meglévő Rofi konfiguráció biztonsági mentése ide: ${ROFI_DIR}.bak";
+            mv "$ROFI_DIR" "${ROFI_DIR}.bak";
         fi
         
         echo "[INFO] Rofi témák telepítése...";
