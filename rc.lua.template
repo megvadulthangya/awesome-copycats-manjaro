@@ -240,8 +240,8 @@ local myawesomemenu = {
    { "reload cfg", awesome.restart },
    { "=========", },
    { "=Logout=", function() awesome.quit() end },
-   { "=Reboot=", "sudo reboot" },
-   { "=Power Off=", "sudo shutdown -h 1" },
+   { "=Reboot=", "systemctl reboot" },
+   { "=Power Off=", "systemctl poweroff" },
 }
 
 awful.util.mymainmenu = freedesktop.menu.build {
