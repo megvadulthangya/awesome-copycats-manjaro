@@ -454,8 +454,8 @@ globalkeys = mytable.join(
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit,
-              {description = "quit awesome", group = "awesome"}),
+    awful.key({ modkey, "Shift"   }, "q", function () awful.spawn("__USER_HOME__/.config/rofi/scripts/powermenu_t1") end,
+              {description = "Sign Out/Power Options", group = "awesome"}),
 
     awful.key({ modkey, altkey    }, "l",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
@@ -557,7 +557,7 @@ globalkeys = mytable.join(
         function () awful.spawn.with_shell("playerctl previous") end,
         {description = "previous track", group = "media"}),
 
-    awful.key({}, ""XF86AudioStop",
+    awful.key({}, "XF86AudioStop",
         function () awful.spawn.with_shell("playerctl stop") end,
         {description = "stop track", group = "media"}),
 
@@ -648,7 +648,8 @@ globalkeys = mytable.join(
               {description = "lua execute prompt", group = "awesome"})
     --]]
     awful.key({ modkey},"r", function()
-    awful.spawn('rofi -terminal tilix -combi-modi window,drun -show combi -modi combi')
+--    awful.spawn('rofi -terminal tilix -combi-modi window,drun -show combi -modi combi')
+    awful.spawn('__USER_HOME__/.config/rofi/scripts/launcher_t3')
     end,
     {description = 'Main menu', group = 'awesome'}),
     -- dmenu
