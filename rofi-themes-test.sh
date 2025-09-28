@@ -247,6 +247,7 @@ echo "Lock script elhelyezve."
 # --- .xprofile létrehozása ---
 sudo -u "$USERNAME" bash -c "echo '.xprofile létrehozása...' && cat <<EOF >> \"$USER_HOME/.xprofile\"
 export QT_QPA_PLATFORMTHEME=\"qt5ct\"
+export GTK_THEME="Matcha-dark-pueril"
 EOF"
 
 # --- Set flameshot to a conservative color ---
