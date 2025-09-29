@@ -141,12 +141,8 @@ if [ -n "$SUDO_USER" ]; then
         cd /tmp;
         # Ha már létezik a mappa, töröljük, hogy tiszta telepítés legyen
         rm -rf rofi;
-        # ⬇️ EZT A SORT MÓDOSÍTOTTAM:
         git clone --depth=1 -b my-awesome-config https://github.com/megvadulthangya/Awesome-rofi.git rofi;
-        # ⬆️ EZT A SORT MÓDOSÍTOTTAM. Itt már a /tmp/rofi mappában leszünk
         cd rofi;
-        
-        # A setup.sh logikáját itt hajtjuk végre közvetlenül
         echo "[INFO] Betűtípusok telepítése...";
         FONT_DIR="$HOME/.local/share/fonts";
         mkdir -p "$FONT_DIR";
