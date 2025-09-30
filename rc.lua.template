@@ -80,6 +80,9 @@ run_once({
 -- The 'safe-lock.sh' script is executed when the system locks, and the xss-lock setup
 -- will prevent locking while media (MPV, Grayjay, browser) is playing.
 	"xset s " .. idle_seconds .. " " .. idle_seconds .. "; xss-lock -- /usr/local/bin/safe-lock.sh",
+-- Ensures GTK appearance settings (icons/themes for Thunar, mouse cursor, fonts) 
+-- are applied in the AwesomeWM session. It only starts the daemon if it's not already running.
+        "xfsettingsd",
 --pamac updater desktop icon
     "GDK_BACKEND=x11 pamac-tray",
 -- Starts the LXQt PolicyKit authentication agent. This agent handles privilege requests, 
@@ -122,7 +125,6 @@ run_once({
   "kdeconnectd",
 -- Starts the KDE Connect system tray indicator, providing a visual way to manage the connection and access its features
 	"kdeconnect-indicator"
-    
  }) -- comma-separated entries
 
 -- This function implements the XDG autostart specification
