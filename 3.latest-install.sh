@@ -124,6 +124,36 @@ sudo -u "$USERNAME" curl -L -o "$USER_HOME/.local/share/fonts/Icons.bdf" \
   https://raw.githubusercontent.com/lcpz/dots/refs/heads/master/.fonts/Icons.bdf
 sudo -u "$USERNAME" fc-cache -fv "$USER_HOME/.local/share/fonts"
 
+echo "Removing inappropriate wallpapers from nordic-wallpapers-git ..."
+rm -f /usr/share/backgrounds/nordic-wallpapers-git/artix-nord.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/debian.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/debian-galaxy.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/elementaryos.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/fedora.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/gnu-linux.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour1.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour2.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour3.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour4.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign-hevlettpackard.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_windows_11.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_zorin.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/Minimal-Nord.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nixos.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nordic-obsession.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nordtheme.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nord_triangles.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/openbsd.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/opensuse.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/rocket.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/slackware.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-aurora.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-frost.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux-01.png
+
+
+
 echo "Telepítés befejezve!"
 
 set -e
