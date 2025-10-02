@@ -750,21 +750,21 @@ fi
 
 
 # A Fish shell teljes elérési útjának megkeresése
-#FISH_PATH=$(command -v fish)
+FISH_PATH=$(command -v fish)
 
 # Ellenőrzés, hogy a Fish telepítve van-e
-#if [ -z "$FISH_PATH" ]; then
-#    echo "Hiba: A Fish shell nincs telepítve vagy nem található az elérési útvonalon."
-#    exit 1
-#fi
+if [ -z "$FISH_PATH" ]; then
+    echo "Hiba: A Fish shell nincs telepítve vagy nem található az elérési útvonalon."
+    exit 1
+fi
 
-#echo "Fish shell alapértelmezetté tétele..."
+echo "Fish shell alapértelmezetté tétele..."
 
 # Hozzáadjuk a Fish-t az engedélyezett shellekhez, ha még nem szerepel ott
-#if ! grep -q "^${FISH_PATH}$" /etc/shells; then
-#    echo "A(z) '$FISH_PATH' hozzáadása a /etc/shells fájlhoz..."
-#    echo "$FISH_PATH" | tee -a /etc/shells
-#fi
+if ! grep -q "^${FISH_PATH}$" /etc/shells; then
+    echo "A(z) '$FISH_PATH' hozzáadása a /etc/shells fájlhoz..."
+    echo "$FISH_PATH" | tee -a /etc/shells
+fi
 
 # Alapértelmezett shell beállítása az eredeti felhasználónak ($SUDO_USER)
 #if [ -n "$SUDO_USER" ]; then
@@ -776,10 +776,10 @@ fi
 #fi
 
 # Alapértelmezett shell beállítása a root felhasználónak
-#echo "Shell beállítása a 'root' felhasználónak..."
-#chsh -s "$FISH_PATH" root
+echo "Shell beállítása a 'root' felhasználónak..."
+chsh -s "$FISH_PATH" root
 
-#echo "Kész! A Fish shell sikeresen beállítva."
+echo "Kész! A Fish shell sikeresen beállítva."
 
 
 # --- Rendszer újraindítása ---
