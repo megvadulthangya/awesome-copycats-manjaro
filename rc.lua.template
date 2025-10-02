@@ -100,7 +100,7 @@ run_once({
 	"nm-applet",
 -- This line would typically start 'picom', a standalone compositor used for managing
 -- shadows, transparency, and tearing (it provides the visual effects for the desktop).
-	("picom"),
+	"picom",
 -- Runs 'unclutter' to automatically hide the mouse cursor when it is not being moved
 -- (i.e., when you are actively typing or not using the mouse). The '-root' flag
 -- ensures it works across the entire root window.
