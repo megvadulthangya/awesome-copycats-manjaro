@@ -126,33 +126,6 @@ sudo -u "$USERNAME" curl -fL -o "$USER_HOME/.local/share/fonts/Icons.bdf" \
   https://raw.githubusercontent.com/lcpz/dots/refs/heads/master/.fonts/Icons.bdf
 sudo -u "$USERNAME" fc-cache -fv "$USER_HOME/.local/share/fonts"
 
-echo "Removing inappropriate wallpapers from nordic-wallpapers-git ..."
-rm -f /usr/share/backgrounds/nordic-wallpapers-git/artix-nord.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/debian.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/debian-galaxy.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/elementaryos.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/fedora.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/gnu-linux.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour1.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour2.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour3.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour4.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign-hevlettpackard.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_windows_11.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_zorin.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/Minimal-Nord.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nixos.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nordic-obsession.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nordtheme.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nord_triangles.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/openbsd.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/opensuse.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/rocket.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/slackware.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-aurora.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-frost.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux-01.png
 
 echo "Telepítés befejezve!"
 
@@ -614,6 +587,78 @@ apply_qt_settings ~ "root"
 
 echo "Minden GTK és Qt beállítás sikeresen alkalmazva."
 
+# ----------------------------------------------------------------------
+# KVANTUM TÉMÁK TELEPÍTÉSE ÉS BEÁLLÍTÁSA
+# ----------------------------------------------------------------------
+
+echo "=== Kvantum témák telepítése ==="
+
+# Kvantum csomag telepítése
+if ! command -v kvantummanager &> /dev/null; then
+    echo "Kvantum Manager telepítése..."
+    case "$PKG_MGR" in
+        pamac|yay|paru)
+            install_aur kvantum-qt5 kvantum-qt6
+            ;;
+        pacman)
+            install_repo kvantum-qt5 kvantum-qt6
+            ;;
+    esac
+fi
+
+# Kvantum témák letöltése és telepítése
+KVANTUM_THEMES_DIR="$USER_HOME/.config/kvantum"
+sudo -u "$USERNAME" mkdir -p "$KVANTUM_THEMES_DIR"
+
+echo "Nordic Kvantum témák letöltése..."
+cd /tmp
+if [ -d "Nordic" ]; then
+    rm -rf Nordic
+fi
+
+sudo -u "$USERNAME" git clone --depth=1 https://github.com/EliverLara/Nordic.git
+cd Nordic/kde/kvantum
+
+# Témák kicsomagolása
+for theme_file in *.tar.xz; do
+    if [ -f "$theme_file" ]; then
+        theme_name="${theme_file%.tar.xz}"
+        echo "Kvantum téma telepítése: $theme_name"
+        sudo -u "$USERNAME" tar -xf "$theme_file" -C "$KVANTUM_THEMES_DIR/"
+    fi
+done
+
+# Ha nincsenek tar.xz fájlok, akkor a mappákat másoljuk
+if [ ! -f "Nordic.tar.xz" ]; then
+    for theme_dir in Nordic*; do
+        if [ -d "$theme_dir" ]; then
+            echo "Kvantum téma másolása: $theme_dir"
+            sudo -u "$USERNAME" cp -r "$theme_dir" "$KVANTUM_THEMES_DIR/"
+        fi
+    done
+fi
+
+# Kvantum konfiguráció beállítása
+echo "Kvantum alapértelmezés beállítása..."
+KVANTUM_CONFIG="$KVANTUM_THEMES_DIR/kvantum.kvconfig"
+sudo -u "$USERNAME" tee "$KVANTUM_CONFIG" > /dev/null << 'EOF'
+[General]
+theme=Nordic
+EOF
+
+# Kvantum manager frissítése (ha fut)
+if command -v kvantummanager &> /dev/null; then
+    echo "Kvantum téma gyorsítótár frissítése..."
+    sudo -u "$USERNAME" kvantummanager --restart
+fi
+
+echo "✅ Kvantum témák telepítve és beállítva"
+
+# Takarítás
+cd /
+rm -rf /tmp/Nordic
+
+
 # A Fish shell teljes elérési útjának megkeresése
 #FISH_PATH=$(command -v fish)
 
@@ -645,6 +690,34 @@ echo "Minden GTK és Qt beállítás sikeresen alkalmazva."
 #chsh -s "$FISH_PATH" root
 
 #echo "Kész! A Fish shell sikeresen beállítva."
+
+echo "Removing inappropriate wallpapers from nordic-wallpapers-git ..."
+rm -f /usr/share/backgrounds/nordic-wallpapers-git/artix-nord.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/debian.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/debian-galaxy.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/elementaryos.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/fedora.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/gnu-linux.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour1.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour2.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour3.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour4.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign-hevlettpackard.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_windows_11.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_zorin.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/Minimal-Nord.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nixos.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nordic-obsession.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nordtheme.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nord_triangles.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/openbsd.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/opensuse.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/rocket.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/slackware.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-aurora.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-frost.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux-01.png
 
 # --- Rendszer újraindítása ---
 echo "Újraindíthatod a rendszert..."
