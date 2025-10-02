@@ -126,6 +126,33 @@ sudo -u "$USERNAME" curl -fL -o "$USER_HOME/.local/share/fonts/Icons.bdf" \
   https://raw.githubusercontent.com/lcpz/dots/refs/heads/master/.fonts/Icons.bdf
 sudo -u "$USERNAME" fc-cache -fv "$USER_HOME/.local/share/fonts"
 
+echo "Removing inappropriate wallpapers from nordic-wallpapers-git ..."
+rm -f /usr/share/backgrounds/nordic-wallpapers-git/artix-nord.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/debian.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/debian-galaxy.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/elementaryos.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/fedora.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/gnu-linux.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour1.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour2.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour3.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour4.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign-hevlettpackard.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_windows_11.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ign_zorin.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/Minimal-Nord.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nixos.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nordic-obsession.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nordtheme.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/nord_triangles.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/openbsd.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/opensuse.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/rocket.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/slackware.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-aurora.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-frost.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux.png \
+      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux-01.png
 
 echo "Telepítés befejezve!"
 
@@ -659,6 +686,69 @@ cd /
 rm -rf /tmp/Nordic
 
 
+# ----------------------------------------------------------------------
+# LIGHTDM GREETER BEÁLLÍTÁSA
+# ----------------------------------------------------------------------
+
+echo "=== LightDM GTK Greeter beállítása ==="
+
+# Ellenőrizzük, hogy a kép fájl létezik-e
+BACKGROUND_FILE="/usr/share/backgrounds/nordic-wallpapers-git/ign_groot.png"
+if [ ! -f "$BACKGROUND_FILE" ]; then
+    echo "Figyelem: A háttérkép nem található: $BACKGROUND_FILE"
+    echo "Alternatív háttérkép keresése..."
+    # Alternatív háttérkép keresése
+    ALTERNATIVE_BG=$(find /usr/share/backgrounds/nordic-wallpapers-git -name "*.png" -o -name "*.jpg" | head -1)
+    if [ -n "$ALTERNATIVE_BG" ]; then
+        BACKGROUND_FILE="$ALTERNATIVE_BG"
+        echo "Alternatív háttérkép használata: $BACKGROUND_FILE"
+    else
+        echo "Hiba: Nem található háttérkép a nordic-wallpapers-git mappában!"
+        # Itt dönthetünk úgy, hogy kihagyjuk a greeter beállítást, vagy folytatjuk alapértelmezett háttérrel
+    fi
+fi
+
+# LightDM config fájl biztonsági mentése
+LIGHTDM_CONFIG="/etc/lightdm/lightdm-gtk-greeter.conf"
+if [ -f "$LIGHTDM_CONFIG" ]; then
+    cp "$LIGHTDM_CONFIG" "${LIGHTDM_CONFIG}.backup.$(date +%Y%m%d%H%M%S)"
+    echo "LightDM config biztonsági mentése kész"
+fi
+
+# LightDM greeter konfiguráció alkalmazása
+echo "LightDM greeter konfiguráció beállítása..."
+cat > "$LIGHTDM_CONFIG" << EOF
+[greeter]
+background = $BACKGROUND_FILE
+user-background = false
+font-name = FiraCode Nerd Font 12
+xft-antialias = true
+icon-theme-name = Nordzy
+screensaver-timeout = 60
+theme-name = Nordic
+cursor-theme-name = xcursor-breeze
+show-clock = true
+default-user-image = #manjaro
+xft-hintstyle = hintfull
+position = 20%,center 40%,center
+clock-format = %Y.%m.%d %H:%M
+panel-position = bottom
+indicators = ~host;~spacer;~clock;~spacer;~language;~session;~a11y;~power
+EOF
+
+echo "✅ LightDM GTK Greeter beállítva"
+
+# LightDM szolgáltatás újraindítása, ha fut
+if systemctl is-active lightdm >/dev/null 2>&1; then
+    echo "LightDM szolgáltatás újraindítása..."
+    systemctl restart lightdm
+fi
+
+# ----------------------------------------------------------------------
+# VÉGE A LIGHTDM RÉSZNEK
+# ----------------------------------------------------------------------
+
+
 # A Fish shell teljes elérési útjának megkeresése
 #FISH_PATH=$(command -v fish)
 
@@ -691,33 +781,6 @@ rm -rf /tmp/Nordic
 
 #echo "Kész! A Fish shell sikeresen beállítva."
 
-echo "Removing inappropriate wallpapers from nordic-wallpapers-git ..."
-rm -f /usr/share/backgrounds/nordic-wallpapers-git/artix-nord.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/debian.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/debian-galaxy.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/elementaryos.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/fedora.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/gnu-linux.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour1.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour2.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour3.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_endeavour4.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign-hevlettpackard.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_windows_11.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ign_zorin.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/Minimal-Nord.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nixos.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nordic-obsession.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nordtheme.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/nord_triangles.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/openbsd.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/opensuse.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/rocket.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/slackware.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-aurora.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/ubuntu-frost.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux.png \
-      /usr/share/backgrounds/nordic-wallpapers-git/voidlinux-01.png
 
 # --- Rendszer újraindítása ---
 echo "Újraindíthatod a rendszert..."
