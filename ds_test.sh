@@ -614,44 +614,36 @@ apply_qt_settings ~ "root"
 
 echo "Minden GTK és Qt beállítás sikeresen alkalmazva."
 
+
 # ----------------------------------------------------------------------
-# KVANTUM TÉMÁK TELEPÍTÉSE ÉS BEÁLLÍTÁSA
+# KVANTUM TÉMÁK TELEPÍTÉSE RENDSZERSZINTEN (minden felhasználó számára)
 # ----------------------------------------------------------------------
 
-echo "=== Kvantum témák telepítése ==="
+echo "=== Kvantum témák telepítése rendszerszinten ==="
 
-# Kvantum csomag telepítése
-if ! command -v kvantummanager &> /dev/null; then
-    echo "Kvantum Manager telepítése..."
-    case "$PKG_MGR" in
-        pamac|yay|paru)
-            install_aur kvantum-qt5 kvantum-qt6
-            ;;
-        pacman)
-            install_repo kvantum-qt5 kvantum-qt6
-            ;;
-    esac
-fi
 
-# Kvantum témák letöltése és telepítése
-KVANTUM_THEMES_DIR="$USER_HOME/.config/kvantum"
-sudo -u "$USERNAME" mkdir -p "$KVANTUM_THEMES_DIR"
-
-echo "Nordic Kvantum témák letöltése..."
+# Kvantum témák letöltése és RENDSZERSZINTŰ telepítése
+echo "Nordic Kvantum témák letöltése rendszerszintre..."
 cd /tmp
 if [ -d "Nordic" ]; then
     rm -rf Nordic
 fi
 
-sudo -u "$USERNAME" git clone --depth=1 https://github.com/EliverLara/Nordic.git
+git clone --depth=1 https://github.com/EliverLara/Nordic.git
 cd Nordic/kde/kvantum
 
-# Témák kicsomagolása
+# RENDSZERSZINTŰ témák telepítése - /usr/share/Kvantum mappába
+KVANTUM_SYSTEM_DIR="/usr/share/Kvantum"
+mkdir -p "$KVANTUM_SYSTEM_DIR"
+
+# Témák kicsomagolása RENDSZERSZINTŰ könyvtárba
 for theme_file in *.tar.xz; do
     if [ -f "$theme_file" ]; then
         theme_name="${theme_file%.tar.xz}"
-        echo "Kvantum téma telepítése: $theme_name"
-        sudo -u "$USERNAME" tar -xf "$theme_file" -C "$KVANTUM_THEMES_DIR/"
+        echo "Kvantum téma telepítése rendszerszintre: $theme_name"
+        tar -xf "$theme_file" -C "$KVANTUM_SYSTEM_DIR/"
+        # Jogok beállítása, hogy mindenki elérhesse
+        chmod -R 755 "$KVANTUM_SYSTEM_DIR/$theme_name"
     fi
 done
 
@@ -659,16 +651,18 @@ done
 if [ ! -f "Nordic.tar.xz" ]; then
     for theme_dir in Nordic*; do
         if [ -d "$theme_dir" ]; then
-            echo "Kvantum téma másolása: $theme_dir"
-            sudo -u "$USERNAME" cp -r "$theme_dir" "$KVANTUM_THEMES_DIR/"
+            echo "Kvantum téma másolása rendszerszintre: $theme_dir"
+            cp -r "$theme_dir" "$KVANTUM_SYSTEM_DIR/"
+            chmod -R 755 "$KVANTUM_SYSTEM_DIR/$theme_dir"
         fi
     done
 fi
 
-# Kvantum konfiguráció beállítása
-echo "Kvantum alapértelmezés beállítása..."
-KVANTUM_CONFIG="$KVANTUM_THEMES_DIR/kvantum.kvconfig"
-sudo -u "$USERNAME" tee "$KVANTUM_CONFIG" > /dev/null << 'EOF'
+# Felhasználói Kvantum konfiguráció beállítása (opcionális - alapértelmezettként)
+echo "Alapértelmezett Kvantum konfiguráció beállítása..."
+KVANTUM_USER_CONFIG="$USER_HOME/.config/kvantum.kvconfig"
+sudo -u "$USERNAME" mkdir -p "$(dirname "$KVANTUM_USER_CONFIG")"
+sudo -u "$USERNAME" tee "$KVANTUM_USER_CONFIG" > /dev/null << 'EOF'
 [General]
 theme=Nordic
 EOF
@@ -679,11 +673,12 @@ if command -v kvantummanager &> /dev/null; then
     sudo -u "$USERNAME" kvantummanager --restart
 fi
 
-echo "✅ Kvantum témák telepítve és beállítva"
+echo "✅ Kvantum témák telepítve rendszerszinten"
 
 # Takarítás
 cd /
 rm -rf /tmp/Nordic
+
 
 
 # ----------------------------------------------------------------------
