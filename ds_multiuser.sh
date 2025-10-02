@@ -100,7 +100,7 @@ install_aur() {
 
 # --- Repo csomagok ---
 REPO_PKGS=(
-  dmenu rofi flameshot picom scrot unclutter xorg-xbacklight alsa-utils mpd mpc playerctl xorg-fonts-misc ttf-roboto woff2-font-awesome arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock wavemon network-manager-applet feh qt6ct raw-thumbnailer geany ttf-firacode-nerd fish starship bat eza jq fzf nano-syntax-highlighting
+  dmenu rofi flameshot picom scrot unclutter xorg-xbacklight alsa-utils mpd mpc playerctl xorg-fonts-misc ttf-roboto woff2-font-awesome arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock wavemon network-manager-applet feh qt6ct geany ttf-firacode-nerd fish starship bat eza jq fzf nano-syntax-highlighting
 )
 
 echo "Repo csomagok telepítése..."
@@ -108,7 +108,7 @@ install_repo "${REPO_PKGS[@]}"
 
 # --- AUR csomagok ---
 AUR_PKGS=(
-  lain-git awesome-git awesome-freedesktop-git tilix-git tamzen-font i3lock-fancy-git grayjay-bin betterlockscreen nordic-theme nordic-darker-theme nordic-darker-standard-buttons-theme nordic-polar-standard-buttons-theme nordic-standard-buttons-theme nordic-bluish-accent-theme nordic-bluish-accent-standard-buttons-theme geany-nord-theme nordzy-icon-theme nordic-wallpapers-git oh-my-posh-bin fish-done find-the-command kvantum-theme-nordic-git
+  raw-thumbnailer lain-git awesome-git awesome-freedesktop-git tilix-git tamzen-font i3lock-fancy-git grayjay-bin betterlockscreen nordic-theme nordic-darker-theme nordic-darker-standard-buttons-theme nordic-polar-standard-buttons-theme nordic-standard-buttons-theme nordic-bluish-accent-theme nordic-bluish-accent-standard-buttons-theme geany-nord-theme nordzy-icon-theme nordic-wallpapers-git oh-my-posh-bin fish-done find-the-command kvantum-theme-nordic-git
 )
 
 echo "AUR csomagok telepítése..."
