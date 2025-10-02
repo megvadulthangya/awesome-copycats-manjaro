@@ -105,7 +105,7 @@ install_aur() {
 
 # --- Repo csomagok ---
 REPO_PKGS=(
-  dmenu rofi flameshot picom scrot unclutter xorg-xbacklight alsa-utils mpd mpc playerctl xorg-fonts-misc ttf-roboto woff2-font-awesome arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock wavemon network-manager-applet feh qt6ct raw-thumbnailer geany ttf-firacode-nerd fish starship bat eza jq
+  dmenu rofi flameshot picom scrot unclutter xorg-xbacklight alsa-utils mpd mpc playerctl xorg-fonts-misc ttf-roboto woff2-font-awesome arandr lxappearance lxqt-policykit xorg-xev terminus-font xss-lock wavemon network-manager-applet feh qt6ct raw-thumbnailer geany ttf-firacode-nerd fish starship bat eza jq fzf
 )
 
 echo "Repo csomagok telepítése..."
@@ -615,36 +615,36 @@ apply_qt_settings ~ "root"
 echo "Minden GTK és Qt beállítás sikeresen alkalmazva."
 
 # A Fish shell teljes elérési útjának megkeresése
-FISH_PATH=$(command -v fish)
+#FISH_PATH=$(command -v fish)
 
 # Ellenőrzés, hogy a Fish telepítve van-e
-if [ -z "$FISH_PATH" ]; then
-    echo "Hiba: A Fish shell nincs telepítve vagy nem található az elérési útvonalon."
-    exit 1
-fi
+#if [ -z "$FISH_PATH" ]; then
+#    echo "Hiba: A Fish shell nincs telepítve vagy nem található az elérési útvonalon."
+#    exit 1
+#fi
 
-echo "Fish shell alapértelmezetté tétele..."
+#echo "Fish shell alapértelmezetté tétele..."
 
 # Hozzáadjuk a Fish-t az engedélyezett shellekhez, ha még nem szerepel ott
-if ! grep -q "^${FISH_PATH}$" /etc/shells; then
-    echo "A(z) '$FISH_PATH' hozzáadása a /etc/shells fájlhoz..."
-    echo "$FISH_PATH" | tee -a /etc/shells
-fi
+#if ! grep -q "^${FISH_PATH}$" /etc/shells; then
+#    echo "A(z) '$FISH_PATH' hozzáadása a /etc/shells fájlhoz..."
+#    echo "$FISH_PATH" | tee -a /etc/shells
+#fi
 
 # Alapértelmezett shell beállítása az eredeti felhasználónak ($SUDO_USER)
-if [ -n "$SUDO_USER" ]; then
-    echo "Shell beállítása a(z) '$SUDO_USER' felhasználónak..."
-    chsh -s "$FISH_PATH" "$SUDO_USER"
-else
-    echo "Figyelem: A script nem sudo-val fut, a saját felhasználódnak állítom be a shellt."
-    chsh -s "$FISH_PATH" "$USER"
-fi
+#if [ -n "$SUDO_USER" ]; then
+#    echo "Shell beállítása a(z) '$SUDO_USER' felhasználónak..."
+#    chsh -s "$FISH_PATH" "$SUDO_USER"
+#else
+#    echo "Figyelem: A script nem sudo-val fut, a saját felhasználódnak állítom be a shellt."
+#    chsh -s "$FISH_PATH" "$USER"
+#fi
 
 # Alapértelmezett shell beállítása a root felhasználónak
-echo "Shell beállítása a 'root' felhasználónak..."
-chsh -s "$FISH_PATH" root
+#echo "Shell beállítása a 'root' felhasználónak..."
+#chsh -s "$FISH_PATH" root
 
-echo "Kész! A Fish shell sikeresen beállítva."
+#echo "Kész! A Fish shell sikeresen beállítva."
 
 # --- Rendszer újraindítása ---
 echo "Újraindíthatod a rendszert..."
