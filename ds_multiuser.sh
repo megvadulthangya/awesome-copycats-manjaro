@@ -619,10 +619,10 @@ theme=Nordic
 EOF
 
 # Kvantum manager frissítése (ha fut)
-if command -v kvantummanager &> /dev/null; then
-    echo "Kvantum téma gyorsítótár frissítése..."
-    sudo -u "$USERNAME" kvantummanager --restart
-fi
+#if command -v kvantummanager &> /dev/null; then
+#    echo "Kvantum téma gyorsítótár frissítése..."
+#    sudo -u "$USERNAME" kvantummanager --restart
+#fi
 
 echo "✅ Kvantum témák telepítve rendszerszinten"
 
@@ -682,10 +682,10 @@ EOF
 echo "✅ LightDM GTK Greeter beállítva"
 
 # LightDM szolgáltatás újraindítása, ha fut
-if systemctl is-active lightdm >/dev/null 2>&1; then
-    echo "LightDM szolgáltatás újraindítása..."
-    systemctl restart lightdm
-fi
+#if systemctl is-active lightdm >/dev/null 2>&1; then
+#    echo "LightDM szolgáltatás újraindítása..."
+ #   systemctl restart lightdm
+#fi
 
 # ----------------------------------------------------------------------
 # FISH SHELL ALAPÉRTELMEZETTÉ TÉTELE
