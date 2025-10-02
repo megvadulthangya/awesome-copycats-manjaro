@@ -108,7 +108,7 @@ install_repo "${REPO_PKGS[@]}"
 
 # --- AUR csomagok ---
 AUR_PKGS=(
-  raw-thumbnailer lain-git awesome-git awesome-freedesktop-git tilix-git tamzen-font i3lock-fancy-git grayjay-bin betterlockscreen nordic-theme nordic-darker-theme nordic-darker-standard-buttons-theme nordic-polar-standard-buttons-theme nordic-standard-buttons-theme nordic-bluish-accent-theme nordic-bluish-accent-standard-buttons-theme geany-nord-theme nordzy-icon-theme nordic-wallpapers-git oh-my-posh-bin fish-done find-the-command kvantum-theme-nordic-git
+  raw-thumbnailer lain-git awesome-git awesome-freedesktop-git tilix-git tamzen-font i3lock-fancy-git grayjay-bin betterlockscreen nordic-theme nordic-darker-theme nordic-darker-standard-buttons-theme nordic-polar-standard-buttons-theme nordic-standard-buttons-theme nordic-bluish-accent-theme nordic-bluish-accent-standard-buttons-theme geany-nord-theme nordzy-icon-theme nordic-wallpapers-git oh-my-posh-bin fish-done find-the-command
 )
 
 echo "AUR csomagok telepítése..."
