@@ -480,7 +480,7 @@ apply_gtk_settings() {
 # DO NOT EDIT! This file will be overwritten by LXAppearance.
 # Any customization should be done in ~/.gtkrc-2.0.mine instead.
 
-include "/home/gabi/.gtkrc-2.0.mine"
+include "/__USER_HOME__/.gtkrc-2.0.mine"
 gtk-theme-name="Nordic"
 gtk-icon-theme-name="Nordzy-dark"
 gtk-font-name="Noto Sans 10"
