@@ -611,7 +611,7 @@ fi
 
 # Felhasználói Kvantum konfiguráció beállítása (opcionális - alapértelmezettként)
 echo "Alapértelmezett Kvantum konfiguráció beállítása..."
-KVANTUM_USER_CONFIG="$USER_HOME/.config/kvantum.kvconfig"
+KVANTUM_USER_CONFIG="$USER_HOME/.config/kvantum/kvantum.kvconfig"
 sudo -u "$USERNAME" mkdir -p "$(dirname "$KVANTUM_USER_CONFIG")"
 sudo -u "$USERNAME" tee "$KVANTUM_USER_CONFIG" > /dev/null << 'EOF'
 [General]
