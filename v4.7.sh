@@ -992,12 +992,12 @@ chown "$USERNAME:$USERNAME" "$TARGET_DIR"
 chmod 755 "$TARGET_DIR"
 
 if [ -d "$SOURCE_DIR" ]; then
-    for item in "$SOURCE_DIR"/*; do
-        [ -e "$item" ] || continue
-        ln -sf "$item" "$TARGET_DIR/$(basename "$item")"
-        chown "$USERNAME:$USERNAME" "$TARGET_DIR/$(basename "$item")"
-        echo "✅ $(basename "$item") symlink kész"
-    done
+for item in "$SOURCE_DIR"/*; do
+[ -e "$item" ] || continue
+ln -sf "$item" "$TARGET_DIR/$(basename "$item")"
+chown "$USERNAME:$USERNAME" "$TARGET_DIR/$(basename "$item")"
+echo "✅ $(basename "$item") symlink kész"
+done
 fi
 
 # === FELHASZNÁLÓI SCRIPT A SKELBE LOGGAL ===
@@ -1018,13 +1018,13 @@ echo "⏱ $(date)" >> "$LOG_FILE"
 mkdir -p "$TARGET_DIR"
 
 if [ -d "$SOURCE_DIR" ]; then
-    for item in "$SOURCE_DIR"/*; do
-        [ -e "$item" ] || continue
-        ln -sf "$item" "$TARGET_DIR/$(basename "$item")"
-        echo "✅ $(basename "$item") symlink létrehozva" | tee -a "$LOG_FILE"
-    done
+for item in "$SOURCE_DIR"/*; do
+[ -e "$item" ] || continue
+ln -sf "$item" "$TARGET_DIR/$(basename "$item")"
+echo "✅ $(basename "$item") symlink létrehozva" | tee -a "$LOG_FILE"
+done
 else
-    echo "⚠️  Nem található: $SOURCE_DIR" | tee -a "$LOG_FILE"
+echo "⚠  Nem található: $SOURCE_DIR" | tee -a "$LOG_FILE"
 fi
 
 # Takarítás
@@ -1040,19 +1040,20 @@ echo "✅ Felhasználói script futtatható: $USER_SCRIPT_PATH"
 
 # === /etc/skel/.bash_profile módosítása ===
 PROFILE_FILE="$SKEL_DIR/.bash_profile"
-RUN_CMD="bash \"$HOME/$USER_SCRIPT_NAME\""
+RUN_CMD='bash "$HOME/mission_user_firstlogin.sh"'
 
 if [ -f "$PROFILE_FILE" ]; then
-    if ! grep -q "$USER_SCRIPT_NAME" "$PROFILE_FILE"; then
-        echo "$RUN_CMD" >> "$PROFILE_FILE"
-        echo "✅ Hozzáadva a /etc/skel/.bash_profile-hoz"
-    else
-        echo "ℹ️ Már benne van a bejegyzés"
-    fi
+if ! grep -q "$USER_SCRIPT_NAME" "$PROFILE_FILE"; then
+echo "$RUN_CMD" >> "$PROFILE_FILE"
+echo "✅ Hozzáadva a /etc/skel/.bash_profile-hoz"
 else
-    echo "$RUN_CMD" > "$PROFILE_FILE"
-    echo "✅ Új /etc/skel/.bash_profile létrehozva"
+echo "ℹ Már benne van a bejegyzés"
 fi
+else
+echo "$RUN_CMD" > "$PROFILE_FILE"
+echo "✅ Új /etc/skel/.bash_profile létrehozva"
+fi
+
 
 echo ""
 echo "🎉 Mission Impossibru - CLEAN SKEL EDITION w/ Logging beállítva!"
