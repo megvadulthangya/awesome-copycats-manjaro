@@ -458,7 +458,7 @@ globalkeys = mytable.join(
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q", function () awful.spawn("__USER_HOME__/.config/rofi/scripts/powermenu_t1") end,
+    awful.key({ modkey, "Shift"   }, "q", function () awful.spawn("powermenu_t1") end,
               {description = "Sign Out/Power Options", group = "awesome"}),
 
     awful.key({ modkey, altkey    }, "l",     function () awful.tag.incmwfact( 0.05)          end,
@@ -653,7 +653,7 @@ globalkeys = mytable.join(
     --]]
     awful.key({ modkey},"r", function()
 --    awful.spawn('rofi -terminal tilix -combi-modi window,drun -show combi -modi combi')
-    awful.spawn('__USER_HOME__/.config/rofi/scripts/launcher_t3')
+    awful.spawn('launcher_t3')
     end,
     {description = 'Main menu', group = 'awesome'}),
     -- dmenu
