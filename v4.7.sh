@@ -1040,7 +1040,7 @@ echo "✅ Felhasználói script futtatható: $USER_SCRIPT_PATH"
 
 # === /etc/skel/.bash_profile módosítása ===
 PROFILE_FILE="$SKEL_DIR/.bash_profile"
-RUN_CMD="bash \"~/$USER_SCRIPT_NAME\""
+RUN_CMD="bash \"$HOME/$USER_SCRIPT_NAME\""
 
 if [ -f "$PROFILE_FILE" ]; then
     if ! grep -q "$USER_SCRIPT_NAME" "$PROFILE_FILE"; then
