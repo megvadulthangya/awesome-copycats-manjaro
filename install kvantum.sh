@@ -723,19 +723,24 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
 fi' "$USER_HOME/.zshrc"
 
-# Alternatív Kvantum beállítás
-echo "Alternatív Kvantum beállítás..."
-for TARGET in "$USER_HOME" "/etc/skel"; do
-    KV_DIR="$TARGET/.config/kvantum"
-    mkdir -p "$KV_DIR"
-    cat > "$KV_DIR/kvantum.kvconfig" << 'EOF'
-[General]
-theme=Nordic
-EOF
-done
+# --- Kvantum beállítás --- FIXED VERSION ---
+echo "Kvantum beállítása..."
+KVANTUM_CONFIG='[General]
+theme=Nordic'
 
-# Jogosultságok beállítása a felhasználói fájlhoz
-chown "$USERNAME:$USERNAME" "$USER_HOME/.config/kvantum/kvantum.kvconfig"
+# Felhasználói konfiguráció
+KVANTUM_USER_DIR="$USER_HOME/.config/Kvantum"
+KVANTUM_USER_FILE="$KVANTUM_USER_DIR/kvantum.kvconfig"
+sudo -u "$USERNAME" mkdir -p "$KVANTUM_USER_DIR"
+echo "$KVANTUM_CONFIG" | sudo -u "$USERNAME" tee "$KVANTUM_USER_FILE" > /dev/null
+
+# /etc/skel konfiguráció
+KVANTUM_SKEL_DIR="/etc/skel/.config/Kvantum"
+KVANTUM_SKEL_FILE="$KVANTUM_SKEL_DIR/kvantum.kvconfig"
+mkdir -p "$KVANTUM_SKEL_DIR"
+echo "$KVANTUM_CONFIG" | tee "$KVANTUM_SKEL_FILE" > /dev/null
+
+echo "✅ Kvantum konfiguráció beállítva"
 
 # --- .xprofile beállítás ---
 echo ".xprofile beállítása..."
