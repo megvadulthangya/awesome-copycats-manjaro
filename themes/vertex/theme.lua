@@ -1,7 +1,8 @@
 --[[
 
-     Vertex Awesome WM theme
+     Vertex Awesome WM theme with Nordic color scheme
      github.com/lcpz
+     Modified with Nordic colors
 
 --]]
 
@@ -20,16 +21,17 @@ theme.icon_dir                                  = os.getenv("HOME") .. "/.config
 theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/themes/vertex/wall.png"
 theme.font                                      = "Roboto Bold 12"
 theme.taglist_font                              = "FontAwesome 17"
-theme.fg_normal                                 = "#FFFFFF"
-theme.fg_focus                                  = "#6A95EB"
-theme.bg_focus                                  = "#303030"
-theme.bg_focus2                                 = "#3762B8"
-theme.bg_normal                                 = "#242424"
-theme.fg_urgent                                 = "#CC9393"
-theme.bg_urgent                                 = "#006B8E"
+-- Nordic color scheme
+theme.fg_normal                                 = "#E5E9F0"  -- Snow Storm 2
+theme.fg_focus                                  = "#88C0D0"  -- Frost 2
+theme.bg_focus                                  = "#3B4252"  -- Polar Night 2
+theme.bg_focus2                                 = "#4C566A"  -- Polar Night 3
+theme.bg_normal                                 = "#2E3440"  -- Polar Night 1
+theme.fg_urgent                                 = "#BF616A"  -- Aurora red
+theme.bg_urgent                                 = "#5E81AC"  -- Frost 4
 theme.border_width                              = dpi(4)
-theme.border_normal                             = "#252525"
-theme.border_focus                              = "#7CA2EE"
+theme.border_normal                             = "#3B4252"  -- Polar Night 2
+theme.border_focus                              = "#81A1C1"  -- Frost 3
 theme.tooltip_border_color                      = theme.fg_focus
 theme.tooltip_border_width                      = theme.border_width
 theme.menu_height                               = dpi(24)
@@ -37,7 +39,7 @@ theme.menu_width                                = dpi(250)
 theme.awesome_icon                              = theme.icon_dir .. "/awesome.png"
 theme.taglist_squares_sel                       = gears.surface.load_from_shape(dpi(3), dpi(30), gears.shape.rectangle, theme.fg_focus)
 theme.taglist_squares_unsel                     = gears.surface.load_from_shape(dpi(3), dpi(30), gears.shape.rectangle, theme.bg_focus2)
-theme.panelbg                                   = theme.icon_dir .. "/panel.png"
+-- Eltávolítottuk a panelbg képet és színű háttérrel helyettesítettük
 theme.bat000charging                            = theme.icon_dir .. "/bat-000-charging.png"
 theme.bat000                                    = theme.icon_dir .. "/bat-000.png"
 theme.bat020charging                            = theme.icon_dir .. "/bat-020-charging.png"
@@ -112,12 +114,12 @@ local markup = lain.util.markup
 
 -- Clock
 --os.setlocale(os.getenv("LANG")) -- to localize the clock
-local mytextclock = wibox.widget.textclock(markup("#FFFFFF", "%a %d %b, %H:%M"))
+local mytextclock = wibox.widget.textclock(markup("#E5E9F0", "%a %d %b, %H:%M"))
 mytextclock.font = theme.font
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock },
     notification_preset = {
-        fg = "#FFFFFF",
+        fg = "#E5E9F0",
         bg = theme.bg_normal,
         position = "top_middle",
         font = "Monospace 10"
@@ -319,8 +321,18 @@ local barcolor2 = gears.color({
     type  = "linear",
     from  = { 0, dpi(46) },
     to    = { dpi(46), dpi(46) },
-    stops = { {0, "#323232"}, {1, theme.bg_normal} }
+    stops = { {0, "#434C5E"}, {1, theme.bg_normal} }  -- Polar Night colors
 })
+
+-- Új színek a taglist-hez
+local taglist_bg_focus = gears.color({
+    type  = "linear",
+    from  = { 0, 0 },
+    to    = { dpi(38), 0 },
+    stops = { {0, "#5E81AC"}, {1, "#88C0D0"} }  -- Frost színek
+})
+
+local taglist_bg_occupied = "#4C566A"  -- Polar Night 3 - foglalt workspace-eknek
 
 local dockshape = function(cr, width, height)
     gears.shape.partially_rounded_rect(cr, width, height, false, true, true, false, 6)
@@ -417,20 +429,30 @@ function theme.at_screen_connect(s)
                            awful.button({}, 5, function () awful.layout.inc(-1) end)))
     s.layoutb = wibox.container.margin(s.mylayoutbox, dpi(8), dpi(11), dpi(3), dpi(3))
 
-    -- Create a taglist widget
+    -- Create a taglist widget - JAVÍTOTT RÉSZ
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons, {
         font = theme.taglist_font,
         shape = gears.shape.rectangle,
         spacing = dpi(10),
-        square_unsel = theme.square_unsel,
-        bg_focus = barcolor
+        -- Itt javítjuk a taglist megjelenését
+        bg_focus = taglist_bg_focus,
+        bg_occupied = taglist_bg_occupied,
+        bg_empty = theme.bg_normal,
+        fg_focus = theme.fg_normal,
+        fg_occupied = theme.fg_normal,
+        fg_empty = theme.bg_focus2,
     }, nil, wibox.layout.fixed.vertical())
 
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.focused, awful.util.tasklist_buttons, { bg_focus = "#00000000" })
 
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(25), bg = gears.color.create_png_pattern(theme.panelbg) })
+    -- Create the wibox - MÓDOSÍTOTT RÉSZ: itt most már Nordic színű a háttér
+    s.mywibox = awful.wibar({ 
+        position = "top", 
+        screen = s, 
+        height = dpi(25), 
+        bg = theme.bg_normal  -- Nordic színséma használata a felső sávhoz
+    })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
