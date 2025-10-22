@@ -1,7 +1,8 @@
 --[[
 
-     Holo Awesome WM theme 3.0
+     Holo Awesome WM theme 3.0 - Nord Color Scheme
      github.com/lcpz
+     Nord colors: https://www.nordtheme.com/
 
 --]]
 
@@ -20,18 +21,38 @@ theme.icon_dir                                  = os.getenv("HOME") .. "/.config
 theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/themes/holo/wall.png"
 theme.font                                      = "Roboto Bold 12"
 theme.taglist_font                              = "Roboto Condensed Regular 12"
-theme.fg_normal                                 = "#FFFFFF"
-theme.fg_focus                                  = "#0099CC"
-theme.bg_focus                                  = "#303030"
-theme.bg_normal                                 = "#242424"
-theme.fg_urgent                                 = "#CC9393"
-theme.bg_urgent                                 = "#006B8E"
+
+-- Nord Color Scheme
+theme.nord0 = "#2E3440"
+theme.nord1 = "#3B4252"
+theme.nord2 = "#434C5E"
+theme.nord3 = "#4C566A"
+theme.nord4 = "#D8DEE9"
+theme.nord5 = "#E5E9F0"
+theme.nord6 = "#ECEFF4"
+theme.nord7 = "#8FBCBB"
+theme.nord8 = "#88C0D0"
+theme.nord9 = "#81A1C1"
+theme.nord10 = "#5E81AC"
+theme.nord11 = "#BF616A"
+theme.nord12 = "#D08770"
+theme.nord13 = "#EBCB8B"
+theme.nord14 = "#A3BE8C"
+theme.nord15 = "#B48EAD"
+
+-- Applying Nord colors
+theme.fg_normal                                 = theme.nord4
+theme.fg_focus                                  = theme.nord8
+theme.bg_focus                                  = theme.nord1
+theme.bg_normal                                 = theme.nord0
+theme.fg_urgent                                 = theme.nord11
+theme.bg_urgent                                 = theme.nord1
 theme.border_width                              = dpi(3)
-theme.border_normal                             = "#252525"
-theme.border_focus                              = "#0099CC"
-theme.taglist_fg_focus                          = "#FFFFFF"
-theme.tasklist_bg_normal                        = "#222222"
-theme.tasklist_fg_focus                         = "#4CB7DB"
+theme.border_normal                             = theme.nord0
+theme.border_focus                              = theme.nord8
+theme.taglist_fg_focus                          = theme.nord6
+theme.tasklist_bg_normal                        = theme.nord0
+theme.tasklist_fg_focus                         = theme.nord8
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
 theme.menu_icon_size                            = dpi(32)
@@ -97,25 +118,25 @@ theme.titlebar_maximized_button_focus_active    = theme.default_dir.."/titlebar/
 theme.musicplr = string.format("%s -e ncmpcpp", awful.util.terminal)
 
 local markup = lain.util.markup
-local blue   = "#80CCE6"
+local blue   = theme.nord8  -- Changed from #80CCE6 to nord8
 local space3 = markup.font("Roboto 3", " ")
 
 -- Clock
-local mytextclock = wibox.widget.textclock(markup("#FFFFFF", space3 .. "%H:%M   " .. markup.font("Roboto 4", " ")))
+local mytextclock = wibox.widget.textclock(markup(theme.nord4, space3 .. "%H:%M   " .. markup.font("Roboto 4", " ")))
 mytextclock.font = theme.font
 local clock_icon = wibox.widget.imagebox(theme.clock)
 local clockbg = wibox.container.background(mytextclock, theme.bg_focus, gears.shape.rectangle)
 local clockwidget = wibox.container.margin(clockbg, dpi(0), dpi(3), dpi(5), dpi(5))
 
 -- Calendar
-local mytextcalendar = wibox.widget.textclock(markup.fontfg(theme.font, "#FFFFFF", space3 .. "%d %b " .. markup.font("Roboto 5", " ")))
+local mytextcalendar = wibox.widget.textclock(markup.fontfg(theme.font, theme.nord4, space3 .. "%d %b " .. markup.font("Roboto 5", " ")))
 local calendar_icon = wibox.widget.imagebox(theme.calendar)
 local calbg = wibox.container.background(mytextcalendar, theme.bg_focus, gears.shape.rectangle)
 local calendarwidget = wibox.container.margin(calbg, dpi(0), dpi(0), dpi(5), dpi(5))
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock, mytextcalendar },
     notification_preset = {
-        fg = "#FFFFFF",
+        fg = theme.nord4,
         bg = theme.bg_normal,
         position = "bottom_right",
         font = "Monospace 10"
@@ -130,7 +151,7 @@ theme.mail = lain.widget.imap({
     mail     = "mail",
     password = "keyring get mail",
     settings = function()
-        mail_notification_preset.fg = "#FFFFFF"
+        mail_notification_preset.fg = theme.nord4
         mail  = ""
         count = ""
 
@@ -139,7 +160,7 @@ theme.mail = lain.widget.imap({
             count = mailcount .. " "
         end
 
-        widget:set_markup(markup.font(theme.font, markup(blue, mail) .. markup("#FFFFFF", count)))
+        widget:set_markup(markup.font(theme.font, markup(blue, mail) .. markup(theme.nord4, count)))
     end
 })
 --]]
@@ -225,9 +246,9 @@ theme.volume = lain.widget.alsabar({
     --togglechannel = "IEC958,3",
     width = dpi(80), height = dpi(10), border_width = dpi(0),
     colors = {
-        background = "#383838",
-        unmute     = "#80CCE6",
-        mute       = "#FF9F9F"
+        background = theme.nord2,
+        unmute     = theme.nord8,  -- Changed to nord8
+        mute       = theme.nord11  -- Changed to nord11 (red)
     },
 })
 theme.volume.bar.paddings = dpi(0)
@@ -285,7 +306,7 @@ local barcolor  = gears.color({
     type  = "linear",
     from  = { dpi(32), 0 },
     to    = { dpi(32), dpi(32) },
-    stops = { {0, theme.bg_focus}, {0.25, "#505050"}, {1, theme.bg_focus} }
+    stops = { {0, theme.bg_focus}, {0.25, theme.nord2}, {1, theme.bg_focus} }
 })
 
 function theme.at_screen_connect(s)
