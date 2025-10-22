@@ -1,7 +1,8 @@
 --[[
 
-     Copland Awesome WM theme 2.0
+     Copland Awesome WM theme 2.0 - Nord color scheme
      github.com/lcpz
+     Modified by github.com/megvadulthangya with Nord colors
 
 --]]
 
@@ -18,20 +19,21 @@ local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/copland"
 theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "Terminus 12"
-theme.fg_normal                                 = "#BBBBBB"
-theme.fg_focus                                  = "#78A4FF"
-theme.bg_normal                                 = "#111111"
-theme.bg_focus                                  = "#111111"
-theme.fg_urgent                                 = "#000000"
-theme.bg_urgent                                 = "#FFFFFF"
+-- Nord colors
+theme.fg_normal                                 = "#D8DEE9"  -- Nord4
+theme.fg_focus                                  = "#88C0D0"  -- Nord8 - világos Nord kék
+theme.bg_normal                                 = "#2E3440"  -- Nord0
+theme.bg_focus                                  = "#2E3440"  -- Nord0
+theme.fg_urgent                                 = "#2E3440"  -- Nord0
+theme.bg_urgent                                 = "#BF616A"  -- Nord11
 theme.border_width                              = dpi(1)
-theme.border_normal                             = "#141414"
-theme.border_focus                              = "#93B6FF"
-theme.taglist_fg_focus                          = "#FFFFFF"
-theme.taglist_bg_focus                          = "#111111"
-theme.taglist_bg_normal                         = "#111111"
-theme.titlebar_bg_normal                        = "#191919"
-theme.titlebar_bg_focus                         = "#262626"
+theme.border_normal                             = "#3B4252"  -- Nord1
+theme.border_focus                              = "#88C0D0"  -- Nord8
+theme.taglist_fg_focus                          = "#88C0D0"  -- Nord8
+theme.taglist_bg_focus                          = "#3B4252"  -- Nord1
+theme.taglist_bg_normal                         = "#2E3440"  -- Nord0
+theme.titlebar_bg_normal                        = "#3B4252"  -- Nord1
+theme.titlebar_bg_focus                         = "#434C5E"  -- Nord2
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
 theme.tasklist_disable_icon                     = true
@@ -89,9 +91,9 @@ theme.layout_termfair                           = theme.dir .. "/icons/termfair.
 theme.layout_centerwork                         = theme.dir .. "/icons/centerwork.png"
 
 local markup = lain.util.markup
-local blue   = theme.fg_focus
-local red    = "#EB8F8F"
-local green  = "#8FEB8F"
+local blue   = theme.fg_focus  -- Nord8
+local red    = "#BF616A"       -- Nord11
+local green  = "#A3BE8C"       -- Nord14
 
 -- Textclock
 --os.setlocale(os.getenv("LANG")) -- to localize the clock
@@ -135,11 +137,11 @@ theme.mpd = lain.widget.mpd({
     settings = function()
         if mpd_now.state == "play" then
             title = mpd_now.title
-            artist  = " " .. mpd_now.artist  .. markup("#777777", " <span font='Terminus 2'> </span>|<span font='Terminus 5'> </span>")
+            artist  = " " .. mpd_now.artist  .. markup("#4C566A", " <span font='Terminus 2'> </span>|<span font='Terminus 5'> </span>")  -- Nord3
             mpdicon:set_image(theme.play)
         elseif mpd_now.state == "pause" then
             title = "mpd "
-            artist  = "paused" .. markup("#777777", " |<span font='Terminus 5'> </span>")
+            artist  = "paused" .. markup("#4C566A", " |<span font='Terminus 5'> </span>")  -- Nord3
             mpdicon:set_image(theme.pause)
         else
             title  = ""
@@ -198,37 +200,8 @@ local batupd = lain.widget.bat({
         batbar:set_value(bat_now.perc / 100)
     end
 })
-local batbg = wibox.container.background(batbar, "#474747", gears.shape.rectangle)
+local batbg = wibox.container.background(batbar, "#434C5E", gears.shape.rectangle)  -- Nord2
 local batwidget = wibox.container.margin(batbg, dpi(2), dpi(7), dpi(4), dpi(4))
-
--- /home fs
---[[ commented because it needs Gio/Glib >= 2.54
-local fsicon = wibox.widget.imagebox(theme.disk)
-local fsbar = wibox.widget {
-    forced_height    = dpi(1),
-    forced_width     = dpi(59),
-    color            = theme.fg_normal,
-    background_color = theme.bg_normal,
-    margins          = 1,
-    paddings         = 1,
-    ticks            = true,
-    ticks_size       = dpi(6),
-    widget           = wibox.widget.progressbar,
-}
-theme.fs = lain.widget.fs {
-    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = "Terminus 10.5" },
-    settings  = function()
-        if fs_now["/home"].percentage < 90 then
-            fsbar:set_color(theme.fg_normal)
-        else
-            fsbar:set_color("#EB8F8F")
-        end
-        fsbar:set_value(fs_now["/home"].percentage / 100)
-    end
-}
-local fsbg = wibox.container.background(fsbar, "#474747", gears.shape.rectangle)
-local fswidget = wibox.container.margin(fsbg, dpi(2), dpi(7), dpi(4), dpi(4))
---]]
 
 -- ALSA volume bar
 local volicon = wibox.widget.imagebox(theme.vol)
@@ -275,7 +248,7 @@ theme.volume.bar:buttons(my_table.join (
             theme.volume.update()
           end)
 ))
-local volumebg = wibox.container.background(theme.volume.bar, "#474747", gears.shape.rectangle)
+local volumebg = wibox.container.background(theme.volume.bar, "#434C5E", gears.shape.rectangle)  -- Nord2
 local volumewidget = wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
 
 -- Weather
@@ -290,7 +263,7 @@ theme.weather = lain.widget.weather({
 local first     = wibox.widget.textbox(markup.font("Terminus 3", " "))
 local spr       = wibox.widget.textbox(' ')
 local small_spr = wibox.widget.textbox(markup.font("Terminus 4", " "))
-local bar_spr   = wibox.widget.textbox(markup.font("Terminus 3", " ") .. markup.fontfg(theme.font, "#777777", "|") .. markup.font("Terminus 5", " "))
+local bar_spr   = wibox.widget.textbox(markup.font("Terminus 3", " ") .. markup.fontfg(theme.font, "#4C566A", "|") .. markup.font("Terminus 5", " "))  -- Nord3
 
 -- Eminent-like task filtering
 local orig_filter = awful.widget.taglist.filter.all
