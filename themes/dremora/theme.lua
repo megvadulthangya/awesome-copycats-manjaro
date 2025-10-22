@@ -1,7 +1,8 @@
 --[[
 
-     Dremora Awesome WM theme 2.0
-     github.com/lcpz
+     Dremora Awesome WM theme - Nord Color Scheme
+     Based on github.com/lcpz's Dremora theme
+     Nord colors: https://www.nordtheme.com/
 
 --]]
 
@@ -19,20 +20,47 @@ theme.dir                                       = os.getenv("HOME") .. "/.config
 theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "Terminus 12"
 theme.taglist_font                              = "Icons 14"
-theme.fg_normal                                 = "#747474"
-theme.fg_focus                                  = "#DDDCFF"
-theme.bg_normal                                 = "#121212"
-theme.bg_focus                                  = "#121212"
-theme.fg_urgent                                 = "#CC9393"
-theme.bg_urgent                                 = "#2A1F1E"
-theme.border_width                              = dpi(0)
-theme.border_normal                             = "#121212"
-theme.border_focus                              = "#292929"
-theme.titlebar_bg_focus                         = "#292929"
-theme.taglist_fg_focus                          = "#dddcff"
-theme.taglist_bg_focus                          = "#121212"
+
+-- Nord Color Scheme
+theme.nord0  = "#2E3440"  -- darkest background
+theme.nord1  = "#3B4252"  -- lighter background
+theme.nord2  = "#434C5E"  -- selection background
+theme.nord3  = "#4C566A"  -- comment/inactive
+theme.nord4 = "#979797"   -- actually not a nord color,but who cares?
+theme.nord5  = "#E5E9F0"  -- light text
+theme.nord6  = "#ECEFF4"  -- very light text
+theme.nord7  = "#8FBCBB"  -- teal
+theme.nord8  = "#88C0D0"  -- light blue
+theme.nord9  = "#81A1C1"  -- blue
+theme.nord10 = "#5E81AC"  -- dark blue
+theme.nord11 = "#BF616A"  -- red
+theme.nord12 = "#D08770"  -- orange
+theme.nord13 = "#EBCB8B"  -- yellow
+theme.nord14 = "#A3BE8C"  -- green
+theme.nord15 = "#B48EAD"  -- purple
+
+-- Apply Nord colors
+theme.fg_normal                                 = theme.nord4  -- INACTIVE text - lighter gray (nord4)
+theme.fg_focus                                  = theme.nord6  -- ACTIVE text - bright white (kept as requested)
+theme.fg_urgent                                 = theme.nord11 -- red for urgent
+theme.bg_normal                                 = theme.nord0  -- dark background
+theme.bg_focus                                  = theme.nord1  -- slightly lighter for focus
+theme.bg_urgent                                 = theme.nord0  -- dark background with red text
+theme.border_normal                             = theme.nord1  -- lighter border
+theme.border_focus                              = theme.nord9  -- blue border for focus
+theme.titlebar_bg_focus                         = theme.nord1  -- lighter titlebar
+theme.taglist_fg_focus                          = theme.nord6  -- bright white for focused tags
+theme.taglist_fg_normal                         = theme.nord4  -- lighter gray for inactive tags (nord4)
+theme.taglist_bg_focus                          = theme.nord1  -- lighter background for focused tags
+theme.taglist_bg_normal                         = theme.nord0  -- dark background for normal tags
+
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
+theme.menu_bg_normal                            = theme.nord1  -- lighter menu background
+theme.menu_bg_focus                             = theme.nord2  -- even lighter for focused menu items
+theme.menu_fg_normal                            = theme.nord4  -- lighter gray text for menu (inactive)
+theme.menu_fg_focus                             = theme.nord6  -- very light text for focus
+
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
 theme.awesome_icon                              = theme.dir .."/icons/awesome.png"
 theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
@@ -52,6 +80,9 @@ theme.layout_floating                           = theme.dir .. "/icons/floating.
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.useless_gap                               = dpi(10)
+theme.border_width                              = dpi(1)  -- Added slight border for better visibility
+
+-- Titlebar buttons with Nord colors
 theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"
 theme.titlebar_ontop_button_focus_active        = theme.dir .. "/icons/titlebar/ontop_focus_active.png"
@@ -75,46 +106,25 @@ awful.util.tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
 
 local markup     = lain.util.markup
 local separators = lain.util.separators
-local white      = theme.fg_focus
-local gray       = "#858585"
+local white      = theme.nord6  -- Active text (bright white)
+local gray       = theme.nord4  -- Inactive text (lighter Nord gray - nord4)
+local blue       = theme.nord9  -- Blue for active elements
 
--- Textclock
+-- Textclock with Nord colors - inactive parts in lighter gray, active in white
 local mytextclock = wibox.widget.textclock(markup(gray, " %a")
 .. markup(white, " %d ") .. markup(gray, "%b ") ..  markup(white, "%H:%M "))
 mytextclock.font = theme.font
 
--- Calendar
+-- Calendar with Nord colors
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock },
     notification_preset = {
         font = "Terminus 11",
         fg   = white,
-        bg   = theme.bg_normal
+        bg   = theme.nord1
 }})
 
--- Mail IMAP check
---[[ to be set before use
-theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    notification_preset = { fg = white }
-    settings = function()
-        mail  = ""
-        count = ""
-
-        if mailcount > 0 then
-            mail = "Mail "
-            count = mailcount .. " "
-        end
-
-        widget:set_markup(markup.font(theme.font, markup(gray, mail) .. markup(white, count)))
-    end
-})
---]]
-
--- MPD
+-- MPD with Nord colors
 theme.mpd = lain.widget.mpd({
     settings = function()
         mpd_notification_preset.fg = white
@@ -133,36 +143,22 @@ theme.mpd = lain.widget.mpd({
     end
 })
 
--- /home fs
---[[ commented because it needs Gio/Glib >= 2.54
-theme.fs = lain.widget.fs({
-    notification_preset = { fg = white, bg = theme.bg_normal, font = "Terminus 10.5" },
-    settings  = function()
-        fs_header = ""
-        fs_p      = ""
-
-        if fs_now["/home"].percentage >= 90 then
-            fs_header = " Hdd "
-            fs_p      = fs_now["/home"].percentage
-        end
-
-        widget:set_markup(markup.font(theme.font, markup(gray, fs_header) .. markup(white, fs_p)))
-    end
-})
---]]
-
--- Battery
+-- Battery with Nord colors
 local bat = lain.widget.bat({
     settings = function()
         bat_header = " Bat "
         bat_p      = bat_now.perc .. " "
+        if bat_now.status == "Charging" then
+            bat_p = bat_p .. "+"
+        elseif bat_now.status == "Discharging" then
+            bat_p = bat_p .. "-"
+        end
         widget:set_markup(markup.font(theme.font, markup(gray, bat_header) .. markup(white, bat_p)))
     end
 })
 
--- ALSA volume
+-- ALSA volume with Nord colors
 theme.volume = lain.widget.alsa({
-    --togglechannel = "IEC958,3",
     settings = function()
         header = " Vol "
         vlevel  = volume_now.level
@@ -177,19 +173,10 @@ theme.volume = lain.widget.alsa({
     end
 })
 
--- Weather
---[[ to be set before use
-theme.weather = lain.widget.weather({
-    --APPID =
-    city_id = 2643743, -- placeholder (London)
-    notification_preset = { fg = white }
-})
---]]
-
--- Separators
+-- Separators with Nord colors
 local first     = wibox.widget.textbox('<span font="Terminus 4"> </span>')
-local arrl_pre  = separators.arrow_right("alpha", "#1A1A1A")
-local arrl_post = separators.arrow_right("#1A1A1A", "alpha")
+local arrl_pre  = separators.arrow_right("alpha", theme.nord1)
+local arrl_post = separators.arrow_right(theme.nord1, "alpha")
 
 function theme.at_screen_connect(s)
     -- Quake application
@@ -222,8 +209,14 @@ function theme.at_screen_connect(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
-    -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = theme.bg_normal, fg = theme.fg_normal })
+    -- Create the wibox (top bar) - made lighter with nord1
+    s.mywibox = awful.wibar({ 
+        position = "top", 
+        screen = s, 
+        height = dpi(18), 
+        bg = theme.nord1,  -- Changed to lighter background
+        fg = theme.nord4   -- Lighter gray text color for inactive elements
+    })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -244,8 +237,6 @@ function theme.at_screen_connect(s)
             wibox.widget.systray(),
             first,
             theme.mpd.widget,
-            --theme.mail.widget,
-            --theme.fs.widget,
             bat.widget,
             theme.volume.widget,
             mytextclock,
