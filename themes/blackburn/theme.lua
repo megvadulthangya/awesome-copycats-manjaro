@@ -1,6 +1,7 @@
 --[[
 
-     Blackburn Awesome WM theme 3.0
+     Blackburn Awesome WM theme 3.0 - Nord color scheme version
+     last modified by: github.com/megvadulthangya
      github.com/lcpz
 
 --]]
@@ -19,19 +20,39 @@ theme.dir                                       = os.getenv("HOME") .. "/.config
 theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "Terminus 12"
 theme.taglist_font                              = "Icons 12"
-theme.fg_normal                                 = "#D7D7D7"
-theme.fg_focus                                  = "#F6784F"
-theme.bg_normal                                 = "#060606"
-theme.bg_focus                                  = "#060606"
-theme.fg_urgent                                 = "#CC9393"
-theme.bg_urgent                                 = "#2A1F1E"
+
+-- Nord color scheme
+theme.nord0  = "#2E3440"  -- darkest gray
+theme.nord1  = "#3B4252"  -- dark gray
+theme.nord2  = "#434C5E"  -- medium gray
+theme.nord3  = "#4C566A"  -- light gray
+theme.nord4  = "#D8DEE9"  -- lightest gray
+theme.nord5  = "#E5E9F0"  -- off white
+theme.nord6  = "#ECEFF4"  -- white
+theme.nord7  = "#8FBCBB"  -- teal
+theme.nord8  = "#88C0D0"  -- light blue
+theme.nord9  = "#81A1C1"  -- blue
+theme.nord10 = "#5E81AC"  -- dark blue
+theme.nord11 = "#BF616A"  -- red
+theme.nord12 = "#D08770"  -- orange
+theme.nord13 = "#EBCB8B"  -- yellow
+theme.nord14 = "#A3BE8C"  -- green
+theme.nord15 = "#B48EAD"  -- purple
+
+-- Nord narancs használata a fókusz színekhez
+theme.fg_normal                                 = theme.nord4
+theme.fg_focus                                  = theme.nord12  -- Nord narancs
+theme.bg_normal                                 = theme.nord0
+theme.bg_focus                                  = theme.nord0
+theme.fg_urgent                                 = theme.nord11
+theme.bg_urgent                                 = theme.nord1
 theme.border_width                              = dpi(1)
-theme.border_normal                             = "#0E0E0E"
-theme.border_focus                              = "#F79372"
-theme.taglist_fg_focus                          = "#F6784F"
-theme.taglist_bg_focus                          = "#060606"
-theme.tasklist_fg_focus                         = "#F6784F"
-theme.tasklist_bg_focus                         = "#060606"
+theme.border_normal                             = theme.nord1
+theme.border_focus                              = theme.nord12  -- Nord narancs
+theme.taglist_fg_focus                          = theme.nord12  -- Nord narancs
+theme.taglist_bg_focus                          = theme.nord0
+theme.tasklist_fg_focus                         = theme.nord12  -- Nord narancs
+theme.tasklist_bg_focus                         = theme.nord0
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
@@ -78,7 +99,7 @@ awful.util.tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
 
 local markup     = lain.util.markup
 local separators = lain.util.separators
-local gray       = "#9E9C9A"
+local gray       = theme.nord3  -- Nord szürke árnyalat
 
 -- Textclock
 local mytextclock = wibox.widget.textclock(" %H:%M ")
@@ -94,32 +115,10 @@ theme.cal = lain.widget.cal({
     }
 })
 
--- Mail IMAP check
---[[ to be set before use
-theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    notification_preset = { fg = white }
-    settings = function()
-        mail  = ""
-        count = ""
-
-        if mailcount > 0 then
-            mail = "Mail "
-            count = mailcount .. " "
-        end
-
-        widget:set_markup(markup.font(theme.font, markup(gray, mail) .. count))
-    end
-})
---]]
-
 -- MPD
 theme.mpd = lain.widget.mpd({
     settings = function()
-        mpd_notification_preset.fg = white
+        mpd_notification_preset.fg = theme.nord6
         artist = mpd_now.artist .. " "
         title  = mpd_now.title  .. " "
 
@@ -134,24 +133,6 @@ theme.mpd = lain.widget.mpd({
         widget:set_markup(markup.font(theme.font, markup(gray, artist) .. title .. " "))
     end
 })
-
--- /home fs
---[[ commented because it needs Gio/Glib >= 2.54
-theme.fs = lain.widget.fs({
-    notification_preset = { fg = white, bg = theme.bg_normal, font = "Terminus 10.5" },
-    settings  = function()
-        fs_header = ""
-        fs_p      = ""
-
-        if fs_now["/home"].percentage >= 90 then
-            fs_header = " Hdd "
-            fs_p      = fs_now["/home"].percentage
-        end
-
-        widget:set_markup(markup.font(theme.font, markup(gray, fs_header) .. fs_p))
-    end
-})
---]]
 
 -- Battery
 local bat = lain.widget.bat({
@@ -179,29 +160,17 @@ theme.volume = lain.widget.alsa({
     end
 })
 
--- Weather
---[[ to be set before use
-theme.weather = lain.widget.weather({
-    --APPID =
-    city_id = 2643743, -- placeholder (London)
-    settings = function()
-        units = math.floor(weather_now["main"]["temp"])
-        widget:set_markup(" " .. units .. " ")
-    end
-})
---]]
-
 -- Separators
 local first     = wibox.widget.textbox('<span font="Terminus 4"> </span>')
-local arrl_pre  = separators.arrow_right("alpha", "#1A1A1A")
-local arrl_post = separators.arrow_right("#1A1A1A", "alpha")
+local arrl_pre  = separators.arrow_right("alpha", theme.nord1)
+local arrl_post = separators.arrow_right(theme.nord1, "alpha")
 
 local barheight = dpi(18)
 local barcolor  = gears.color({
     type  = "linear",
     from  = { barheight, 0 },
     to    = { barheight, barheight },
-    stops = { {0, theme.bg_focus }, {0.8, theme.border_normal}, {1, "#1A1A1A"} }
+    stops = { {0, theme.bg_focus }, {0.8, theme.border_normal}, {1, theme.nord1} }
 })
 theme.titlebar_bg = barcolor
 
@@ -209,7 +178,7 @@ theme.titlebar_bg_focus = gears.color({
     type  = "linear",
     from  = { barheight, 0 },
     to    = { barheight, barheight },
-    stops = { {0, theme.bg_normal}, {0.5, theme.border_normal}, {1, "#492417"} }
+    stops = { {0, theme.bg_normal}, {0.5, theme.border_normal}, {1, theme.nord2} }
 })
 
 function theme.at_screen_connect(s)
@@ -266,10 +235,6 @@ function theme.at_screen_connect(s)
             wibox.widget.systray(),
             first,
             theme.mpd.widget,
-            --theme.mail.widget,
-            --theme.weather.icon,
-            --theme.weather.widget,
-            --theme.fs.widget,
             bat,
             theme.volume.widget,
             mytextclock,
