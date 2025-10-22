@@ -1,7 +1,7 @@
 --[[
 
-     Powerarrow Dark Awesome WM theme
-     github.com/lcpz
+     Nord Dark Awesome WM theme
+     Alapul véve a powerarrow-dark témán
 
 --]]
 
@@ -18,17 +18,18 @@ local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-dark"
 theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "Terminus 12"
-theme.fg_normal                                 = "#DDDDFF"
-theme.fg_focus                                  = "#EA6F81"
-theme.fg_urgent                                 = "#CC9393"
-theme.bg_normal                                 = "#1A1A1A"
-theme.bg_focus                                  = "#313131"
-theme.bg_urgent                                 = "#1A1A1A"
+-- Nord színek
+theme.fg_normal                                 = "#D8DEE9"
+theme.fg_focus                                  = "#88C0D0"
+theme.fg_urgent                                 = "#BF616A"
+theme.bg_normal                                 = "#2E3440"
+theme.bg_focus                                  = "#3B4252"
+theme.bg_urgent                                 = "#2E3440"
 theme.border_width                              = dpi(1)
-theme.border_normal                             = "#3F3F3F"
-theme.border_focus                              = "#7F7F7F"
-theme.border_marked                             = "#CC9393"
-theme.tasklist_bg_focus                         = "#1A1A1A"
+theme.border_normal                             = "#3B4252"
+theme.border_focus                              = "#81A1C1"
+theme.border_marked                             = "#BF616A"
+theme.tasklist_bg_focus                         = "#2E3440"
 theme.titlebar_bg_focus                         = theme.bg_focus
 theme.titlebar_bg_normal                        = theme.bg_normal
 theme.titlebar_fg_focus                         = theme.fg_focus
@@ -112,27 +113,6 @@ theme.cal = lain.widget.cal({
     }
 })
 
--- Mail IMAP check
-local mailicon = wibox.widget.imagebox(theme.widget_mail)
---[[ commented because it needs to be set before use
-mailicon:buttons(my_table.join(awful.button({ }, 1, function () awful.spawn(mail) end)))
-theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    settings = function()
-        if mailcount > 0 then
-            widget:set_markup(markup.font(theme.font, " " .. mailcount .. " "))
-            mailicon:set_image(theme.widget_mail_on)
-        else
-            widget:set_text("")
-            mailicon:set_image(theme.widget_mail)
-        end
-    end
-})
---]]
-
 -- MPD
 local musicplr = awful.util.terminal .. " -title Music -e ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
@@ -165,7 +145,7 @@ theme.mpd = lain.widget.mpd({
             mpdicon:set_image(theme.widget_music)
         end
 
-        widget:set_markup(markup.font(theme.font, markup("#EA6F81", artist) .. title))
+        widget:set_markup(markup.font(theme.font, markup("#88C0D0", artist) .. title))
     end
 })
 
@@ -192,17 +172,6 @@ local temp = lain.widget.temp({
         widget:set_markup(markup.font(theme.font, " " .. coretemp_now .. "°C "))
     end
 })
-
--- / fs
-local fsicon = wibox.widget.imagebox(theme.widget_hdd)
---[[ commented because it needs Gio/Glib >= 2.54
-theme.fs = lain.widget.fs({
-    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = "Terminus 10" },
-    settings = function()
-        widget:set_markup(markup.font(theme.font, " " .. fs_now["/"].percentage .. "% "))
-    end
-})
---]]
 
 -- Battery
 local baticon = wibox.widget.imagebox(theme.widget_battery)
@@ -259,9 +228,9 @@ local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net({
     settings = function()
         widget:set_markup(markup.font(theme.font,
-                          markup("#7AC82E", " " .. string.format("%06.1f", net_now.received))
+                          markup("#A3BE8C", " " .. string.format("%06.1f", net_now.received))
                           .. " " ..
-                          markup("#46A8C3", " " .. string.format("%06.1f", net_now.sent) .. " ")))
+                          markup("#81A1C1", " " .. string.format("%06.1f", net_now.sent) .. " ")))
     end
 })
 
@@ -309,7 +278,6 @@ function theme.at_screen_connect(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            --spr,
             s.mytaglist,
             s.mypromptbox,
             spr,
@@ -327,11 +295,9 @@ function theme.at_screen_connect(s)
             volicon,
             theme.volume.widget,
             arrl_ld,
-            wibox.container.background(mailicon, theme.bg_focus),
-            --wibox.container.background(theme.mail.widget, theme.bg_focus),
+            wibox.container.background(memicon, theme.bg_focus),
+            wibox.container.background(mem.widget, theme.bg_focus),
             arrl_dl,
-            memicon,
-            mem.widget,
             arrl_ld,
             wibox.container.background(cpuicon, theme.bg_focus),
             wibox.container.background(cpu.widget, theme.bg_focus),
@@ -339,11 +305,9 @@ function theme.at_screen_connect(s)
             tempicon,
             temp.widget,
             arrl_ld,
-            wibox.container.background(fsicon, theme.bg_focus),
-            --wibox.container.background(theme.fs.widget, theme.bg_focus),
+            wibox.container.background(baticon, theme.bg_focus),
+            wibox.container.background(bat.widget, theme.bg_focus),
             arrl_dl,
-            baticon,
-            bat.widget,
             arrl_ld,
             wibox.container.background(neticon, theme.bg_focus),
             wibox.container.background(net.widget, theme.bg_focus),
