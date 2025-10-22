@@ -1,6 +1,7 @@
 --[[
 
      Powerarrow Awesome WM theme - Nord color scheme
+     last modified by: github.com/megvadulthangya
      Based on: github.com/lcpz
 
 --]]

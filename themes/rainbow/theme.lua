@@ -1,6 +1,7 @@
 --[[
 
      Nord Awesome WM theme
+     last modified by: github.com/megvadulthangya
      Alapul véve a Rainbow témán és a Nord palettán
 
 --]]

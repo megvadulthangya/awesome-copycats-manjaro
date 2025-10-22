@@ -2,6 +2,7 @@
 
      Dremora Awesome WM theme - Nord Color Scheme
      Based on github.com/lcpz's Dremora theme
+     last modified by: github.com/megvadulthangya
      Nord colors: https://www.nordtheme.com/
 
 --]]

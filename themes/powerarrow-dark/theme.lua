@@ -1,6 +1,7 @@
 --[[
 
      Nord Dark Awesome WM theme
+     last modified by: github.com/megvadulthangya
      Alapul véve a powerarrow-dark témán
 
 --]]

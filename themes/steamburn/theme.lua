@@ -1,6 +1,7 @@
 --[[
 
      Steamburn-Nord Awesome WM theme
+     last modified by: github.com/megvadulthangya
      Based on Steamburn by lcpz, modified with Nord color scheme elements
 
 --]]

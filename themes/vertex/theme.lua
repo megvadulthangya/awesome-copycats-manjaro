@@ -1,6 +1,7 @@
 --[[
 
      Vertex Awesome WM theme with Nordic color scheme
+     last modified by: github.com/megvadulthangya
      github.com/lcpz
      Modified with Nordic colors
 

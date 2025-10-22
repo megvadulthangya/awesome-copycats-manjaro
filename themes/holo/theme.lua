@@ -2,6 +2,7 @@
 
      Holo Awesome WM theme 3.0 - Nord Color Scheme
      github.com/lcpz
+     last modified by: github.com/megvadulthangya
      Nord colors: https://www.nordtheme.com/
 
 --]]

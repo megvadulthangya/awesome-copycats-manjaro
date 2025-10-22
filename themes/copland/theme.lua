@@ -2,7 +2,7 @@
 
      Copland Awesome WM theme 2.0 - Nord color scheme
      github.com/lcpz
-     Modified by github.com/megvadulthangya with Nord colors
+     last modified by: github.com/megvadulthangya with Nord colors
 
 --]]
 

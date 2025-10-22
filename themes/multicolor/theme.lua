@@ -1,6 +1,7 @@
 --[[
      Nord Multicolor Awesome WM theme 2.0
      Based on multicolor theme by github.com/lcpz
+     last modified by: github.com/megvadulthangya
      Adapted with Nord color scheme
 --]]
 
