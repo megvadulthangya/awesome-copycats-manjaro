@@ -1,7 +1,7 @@
 --[[
 
-     Rainbow Awesome WM theme 2.0
-     github.com/lcpz
+     Nord Awesome WM theme
+     Alapul véve a Rainbow témán és a Nord palettán
 
 --]]
 
@@ -19,17 +19,52 @@ theme.default_dir                               = require("awful.util").get_them
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/rainbow"
 theme.wallpaper                                 = theme.dir .. "/wall.png"
 theme.font                                      = "Terminus 12"
-theme.fg_normal                                 = "#9E9E9E"
-theme.fg_focus                                  = "#EBEBFF"
-theme.bg_normal                                 = "#242424"
-theme.bg_focus                                  = "#242424"
-theme.fg_urgent                                 = "#000000"
-theme.bg_urgent                                 = "#FFFFFF"
+
+-- Nord color palette
+theme.nord0  = "#2E3440"  -- darkest gray
+theme.nord1  = "#3B4252"  -- dark gray
+theme.nord2  = "#434C5E"  -- medium gray
+theme.nord3  = "#4C566A"  -- light gray
+theme.nord4  = "#D8DEE9"  -- lightest gray
+theme.nord5  = "#E5E9F0"  -- off white
+theme.nord6  = "#ECEFF4"  -- snow white
+theme.nord7  = "#8FBCBB"  -- teal
+theme.nord8  = "#88C0D0"  -- light blue
+theme.nord9  = "#81A1C1"  -- blue
+theme.nord10 = "#5E81AC"  -- dark blue
+theme.nord11 = "#BF616A"  -- red
+theme.nord12 = "#D08770"  -- orange
+theme.nord13 = "#EBCB8B"  -- yellow
+theme.nord14 = "#A3BE8C"  -- green
+theme.nord15 = "#B48EAD"  -- purple
+
+-- Theme colors
+theme.fg_normal                                 = theme.nord3  -- Változtatva: nord4-ről nord3-ra (sötétebb szürke inaktív ablakoknak)
+theme.fg_focus                                  = theme.nord6  -- Aktív ablak szövege fehér marad
+theme.fg_minimize                               = theme.nord3  -- Minimalizált ablakok szövege is sötétebb szürke
+theme.bg_normal                                 = theme.nord0
+theme.bg_focus                                  = theme.nord1
+theme.fg_urgent                                 = theme.nord0
+theme.bg_urgent                                 = theme.nord11
 theme.border_width                              = dpi(1)
-theme.border_normal                             = "#242424"
-theme.border_focus                              = "#EBEBFF"
-theme.taglist_fg_focus                          = "#EDEFFF"
-theme.taglist_bg_focus                          = "#242424"
+theme.border_normal                             = theme.nord0
+theme.border_focus                              = theme.nord8
+theme.taglist_fg_focus                          = theme.nord8
+theme.taglist_bg_focus                          = theme.nord1
+theme.taglist_fg_occupied                       = theme.nord4  -- Foglalt tag-ek világosabb szürkével
+theme.taglist_fg_empty                          = theme.nord3  -- Üres tag-ek sötétebb szürkével
+theme.taglist_fg_urgent                         = theme.nord11 -- Sürgős tag-ek pirossal
+
+-- Tasklist colors - itt tudod beállítani a taskbaron lévő ablakok szövegszínét
+theme.tasklist_fg_normal                        = theme.nord3   -- Inaktív ablakok szövege a taskbaren
+theme.tasklist_fg_focus                         = theme.nord6   -- Aktív ablak szövege a taskbaren
+theme.tasklist_fg_urgent                        = theme.nord11  -- Sürgős ablakok szövege
+theme.tasklist_bg_normal                        = theme.nord0
+theme.tasklist_bg_focus                         = theme.nord1
+
+
+
+
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
 theme.ocol                                      = "<span color='" .. theme.fg_normal .. "'>"
@@ -43,7 +78,7 @@ theme.awesome_icon                              = theme.dir .."/icons/awesome.pn
 theme.menu_submenu_icon                         = theme.dir .."/icons/submenu.png"
 theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
 theme.taglist_squares_unsel                     = theme.dir .. "/icons/square_unsel.png"
-theme.useless_gap                               = dpi(8)
+theme.useless_gap                               = dpi(4)
 theme.layout_txt_tile                           = "[t]"
 theme.layout_txt_tileleft                       = "[l]"
 theme.layout_txt_tilebottom                     = "[b]"
@@ -77,6 +112,12 @@ theme.titlebar_maximized_button_focus_inactive  = theme.default_dir.."/titlebar/
 theme.titlebar_maximized_button_normal_active   = theme.default_dir.."/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active    = theme.default_dir.."/titlebar/maximized_focus_active.png"
 
+-- Titlebar colors
+theme.titlebar_bg_normal = theme.nord0
+theme.titlebar_bg_focus  = theme.nord1
+theme.titlebar_fg_normal = theme.nord4
+theme.titlebar_fg_focus  = theme.nord6
+
 -- lain related
 theme.layout_txt_cascade                        = "[cascade]"
 theme.layout_txt_cascadetile                    = "[cascadetile]"
@@ -85,11 +126,12 @@ theme.layout_txt_termfair                       = "[termfair]"
 theme.layout_txt_centerfair                     = "[centerfair]"
 
 local markup = lain.util.markup
-local white  = theme.fg_focus
-local gray   = theme.fg_normal
+local white  = theme.nord6
+local gray   = theme.nord4
+local blue   = theme.nord8
 
 -- Textclock
-local mytextclock = wibox.widget.textclock(markup(white, " %H:%M "))
+local mytextclock = wibox.widget.textclock(markup(blue, " %H:%M "))
 mytextclock.font = theme.font
 
 -- Calendar
@@ -98,32 +140,9 @@ theme.cal = lain.widget.cal({
     notification_preset = {
         font = "Terminus 11",
         fg   = white,
-        bg   = theme.bg_normal
+        bg   = theme.nord0
     }
 })
-
--- Mail IMAP check
---[[ commented because it needs to be set before use
-theme.mail = lain.widget.imap({
-    timeout  = 180,
-    server   = "server",
-    mail     = "mail",
-    password = "keyring get mail",
-    settings = function()
-        mail_notification_preset.fg = white
-
-        mail  = ""
-        count = ""
-
-        if mailcount > 0 then
-            mail = "Mail "
-            count = mailcount .. " "
-        end
-
-        widget:set_markup(markup.font(theme.font, markup(gray, mail) .. markup(white, count)))
-    end
-})
---]]
 
 -- MPD
 theme.mpd = lain.widget.mpd({
@@ -141,37 +160,26 @@ theme.mpd = lain.widget.mpd({
             title  = ""
         end
 
-        widget:set_markup(markup.font(theme.font, markup(gray, artist) .. markup(white, title)))
+        widget:set_markup(markup.font(theme.font, markup(gray, artist) .. markup(blue, title)))
     end
 })
-
--- /home fs
---[[ commented because it needs Gio/Glib >= 2.54
-theme.fs = lain.widget.fs({
-    notification_preset = { fg = white, bg = theme.bg_normal, font = "Terminus 10.5" },
-    settings  = function()
-        local fs_header, fs_p = "", ""
-
-        if fs_now["/home"].percentage >= 90 then
-            fs_header = " Hdd "
-            fs_p      = fs_now["/home"].percentage
-        end
-
-        widget:set_markup(markup.font(theme.font, markup(gray, fs_header) .. markup(white, fs_p)))
-    end
-})
---]]
 
 -- ALSA volume bar
 theme.volume = lain.widget.alsabar({
-    ticks = true, width = dpi(67),
-    notification_preset = { font = theme.font }
+    ticks = true, 
+    width = dpi(67),
+    notification_preset = { font = theme.font },
+    colors = {
+        background = theme.nord1,
+        mute = theme.nord11,
+        unmute = theme.nord8
+    }
 })
 theme.volume.tooltip.wibox.fg = theme.fg_focus
 theme.volume.tooltip.wibox.font = theme.font
 theme.volume.bar:buttons(my_table.join (
           awful.button({}, 1, function()
-            awful.spawn(string.format("%s -e alsamixer", terminal))
+            awful.spawn(string.format("%s -e alsamixer", "alacritty"))
           end),
           awful.button({}, 2, function()
             os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
@@ -190,17 +198,8 @@ theme.volume.bar:buttons(my_table.join (
             theme.volume.update()
           end)
 ))
-local volumebg = wibox.container.background(theme.volume.bar, "#585858", gears.shape.rectangle)
+local volumebg = wibox.container.background(theme.volume.bar, theme.nord1, gears.shape.rectangle)
 local volumewidget = wibox.container.margin(volumebg, dpi(7), dpi(7), dpi(5), dpi(5))
-
--- Weather
---[[ to be set before use
-theme.weather = lain.widget.weather({
-    --APPID =
-    city_id = 2643743, -- placeholder (London)
-    notification_preset = { font = theme.font, fg = white }
-})
---]]
 
 -- Separators
 local first = wibox.widget.textbox(markup.font("Terminus 4", " "))
@@ -214,7 +213,7 @@ end
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    s.quake = lain.util.quake({ app = "alacritty" })
 
     -- If wallpaper is a function, call it with the screen
     local wallpaper = theme.wallpaper
@@ -247,7 +246,13 @@ function theme.at_screen_connect(s)
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = theme.bg_normal, fg = theme.fg_normal })
+    s.mywibox = awful.wibar({ 
+        position = "top", 
+        screen = s, 
+        height = dpi(22), 
+        bg = theme.nord0, 
+        fg = theme.nord4 
+    })
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -258,7 +263,6 @@ function theme.at_screen_connect(s)
             s.mytaglist,
             spr,
             s.mytxtlayoutbox,
-            --spr,
             s.mypromptbox,
             spr,
         },
@@ -268,10 +272,28 @@ function theme.at_screen_connect(s)
             wibox.widget.systray(),
             spr,
             theme.mpd.widget,
-            --theme.mail.widget,
-            --theme.fs.widget,
             volumewidget,
             mytextclock,
+        },
+    }
+    
+    -- Create a bottom wibox for additional widgets
+    s.mybottomwibox = awful.wibar({
+        position = "bottom",
+        screen = s,
+        height = dpi(18),
+        bg = theme.nord0,
+        fg = theme.nord4
+    })
+    
+    s.mybottomwibox:setup {
+        layout = wibox.layout.align.horizontal,
+        { -- Left widgets
+            layout = wibox.layout.fixed.horizontal,
+        },
+        nil, -- Middle widget (empty)
+        { -- Right widgets
+            layout = wibox.layout.fixed.horizontal,
         },
     }
 end
