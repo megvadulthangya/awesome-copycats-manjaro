@@ -124,7 +124,9 @@ run_once({
 -- providing features like notification sync, shared clipboard, and file transfer.
 --	"kdeconnectd",
 -- Starts the KDE Connect system tray indicator, providing a visual way to manage the connection and access its features
-	"kdeconnect-indicator",
+--	"kdeconnect-indicator",
+-- Starts the Gsconnect-backround service.
+        "gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js"
 -- Starts Manjaro Hello
 --	"/usr/bin/manjaro-hello",
 -- Start install script
