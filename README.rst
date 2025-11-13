@@ -16,7 +16,6 @@ A forked and enhanced version of the original Awesome WM Copycats repository, fe
 
 This repository contains themes for Awesome_ window manager 4.x that consistently follow the beautiful Nordic color palette, providing a cohesive and visually harmonious desktop experience.
 
-See branches_ for previous versions.
 
 Purpose
 =======
@@ -34,7 +33,7 @@ This theme collection is specially curated and maintained for the Manjaro Awesom
 This theme repository is an integral part of the Awesome Manjaro Edition - a personal, unified system installer designed to create the same consistent AwesomeWM environment across all devices.
 
 For the complete Manjaro Awesome experience, including ISO and installation details, visit:
-manjaro-awesome-iso_
+Awesome Manjaro Edition_
 
 Features
 ========
@@ -194,3 +193,4 @@ Additional default software used: ::
 .. _dependencies: https://github.com/lcpz/lain/wiki#dependencies
 .. _mail: https://github.com/lcpz/lain/wiki/mail
 .. _weather: https://github.com/lcpz/lain/wiki/weather
+.. _Awesome Manjaro Edition: https://github.com/megvadulthangya/manjaro-awesome-iso
