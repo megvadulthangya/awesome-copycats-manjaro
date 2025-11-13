@@ -34,7 +34,7 @@ This theme collection is specially curated and maintained for the Manjaro Awesom
 This theme repository is an integral part of the Awesome Manjaro Edition - a personal, unified system installer designed to create the same consistent AwesomeWM environment across all devices.
 
 For the complete Manjaro Awesome experience, including ISO and installation details, visit:
-<a href="https://github.com/megvadulthangya/manjaro-awesome-iso" target="_blank" rel="noopener noreferrer">Manjaro Awesome ISO Repository</a>
+manjaro-awesome-iso_
 
 Features
 ========
