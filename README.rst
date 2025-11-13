@@ -1,19 +1,20 @@
-Awesome WM Copycats
+Awesome WM Nordic Copycats
 ===================
 
 -------------------------
 Themes for Awesome WM 4.x
 -------------------------
 
-:Author: Luca CPZ
+:Author: Luca CPZ (forked and modified by megvadulthangya)
 :Version: git
 :License: BY-SA_
-:Source: https://github.com/lcpz/awesome-copycats
+:Source: https://github.com/megvadulthangya/awesome-copycats-manjaro
 
 Description
 ===========
+A forked and enhanced version of the original Awesome WM Copycats repository, featuring unified Nordic color scheme across all themes.
 
-A set of themes for the Awesome_ window manager, version 4.x.
+This repository contains themes for Awesome_ window manager 4.x that consistently follow the beautiful Nordic color palette, providing a cohesive and visually harmonious desktop experience.
 
 See branches_ for previous versions.
 
@@ -23,6 +24,17 @@ Purpose
 The main purpose of this repository is to spread ready to use configurations, which can also serve as a cookbook for customisation.
 
 A secondary aim is to add new themes only when they constitute different UI/UX designs.
+
+**This fork specifically maintains the original design philosophy while applying a cohesive Nordic color palette across all themes, creating a unified visual experience for Manjaro Awesome users.**
+
+Manjaro Awesome Integration
+This theme collection is specially curated and maintained for the Manjaro Awesome edition. The Nordic color scheme provides a consistent and visually appealing desktop environment that complements the Manjaro Awesome distribution.
+
+**🏔️ Awesome Manjaro Edition**
+This theme repository is an integral part of the Awesome Manjaro Edition - a personal, unified system installer designed to create the same consistent AwesomeWM environment across all devices.
+
+For the complete Manjaro Awesome experience, including ISO and installation details, visit:
+https://github.com/megvadulthangya/manjaro-awesome-iso
 
 Features
 ========
@@ -47,9 +59,11 @@ Features
 - Non-empty tag browsing
 - On-the-fly useless gaps resize
 - Dynamic tagging
+- Cohesive Nordic color scheme across all themes
 
 Gallery
 =======
+Screenshots for each theme showcasing the unified Nordic color palette...
 
 **Multicolor**, inspired by lucamanni_
 
@@ -153,7 +167,7 @@ The fonts used in the screenshots are: Terminus_ (Multicolor, Powerarrow, Powera
 
 As taglist font, Blackburn and Dremora use Icons_, Vertex uses FontAwesome_: be sure to have bitmaps enabled if running under Debian or Ubuntu_.
 
-Every theme has a colorscheme_.
+All themes consistently implement the Nordic color scheme, providing a unified aesthetic experience while maintaining distinct layout variations.
 
 Additional default software used: ::
 
