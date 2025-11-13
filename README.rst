@@ -193,4 +193,4 @@ Additional default software used: ::
 .. _dependencies: https://github.com/lcpz/lain/wiki#dependencies
 .. _mail: https://github.com/lcpz/lain/wiki/mail
 .. _weather: https://github.com/lcpz/lain/wiki/weather
-.. _AwesomeManjaro https://github.com/megvadulthangya/manjaro-awesome-iso
+.. _AwesomeManjaro: https://github.com/megvadulthangya/manjaro-awesome-iso
