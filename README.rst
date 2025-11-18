@@ -121,7 +121,6 @@ These packages are required to ensure the correct operation of widgets, layouts,
 
 Install both dependencies from the AUR using your preferred helper:
 
-.. code-block:: shell
 
 ```
 yay -S awesome-freedesktop-git lain-git
@@ -135,7 +134,6 @@ pamac install awesome-freedesktop-git lain-git
 
 Install **awesome-freedesktop** manually:
 
-.. code-block:: shell
 
 ```
 git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
@@ -143,7 +141,7 @@ git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/free
 
 Or install it via LuaRocks:
 
-.. code-block:: shell
+
 
 ```
 luarocks install lcpz/awesome-freedesktop
@@ -151,7 +149,7 @@ luarocks install lcpz/awesome-freedesktop
 
 Install **lain**:
 
-.. code-block:: shell
+
 
 ```
 git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
@@ -161,7 +159,6 @@ git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
 
 ## Main installation
 
-.. code-block:: shell
 
 ```
 git clone --branch nord --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
@@ -170,7 +167,6 @@ mkdir -p ~/.config/awesome && mv -bv awesome-copycats-manjaro/{*,.[^.]*} ~/.conf
 
 If you prefer to remove all Git metadata during installation:
 
-.. code-block:: shell
 
 ```
 mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
