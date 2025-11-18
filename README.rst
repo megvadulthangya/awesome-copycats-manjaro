@@ -173,7 +173,7 @@ If you prefer to remove all Git metadata during installation:
 .. code-block:: shell
 
 
-    $ mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
+     mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
 
 
 ---
