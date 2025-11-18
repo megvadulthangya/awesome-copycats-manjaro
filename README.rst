@@ -136,7 +136,7 @@ Install both dependencies from the AUR using your preferred helper:
 	pamac install awesome-freedesktop-git lain-git
 
 
-### Debian-based and other distributions
+**Debian-based and other distributions**
 
 Install **awesome-freedesktop** manually:
 
