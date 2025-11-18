@@ -108,6 +108,46 @@ Screenshots for each theme showcasing the unified Nordic color palette...
 
 Installation
 ============
+
+---
+
+## **Optional: Automated installation via install.sh**
+
+For users who prefer a fully automated setup, an installation script is available.
+This script performs the following actions:
+
+1. Installs **lain** and **awesome-freedesktop** automatically
+2. Installs this theme and copies all required files
+3. Creates a backup of your existing `rc.lua` (if present)
+4. Asks whether you want to overwrite your current `rc.lua` with the new template
+
+To use the script, download it with `wget`:
+
+.. code-block:: shell
+
+```
+wget https://raw.githubusercontent.com/megvadulthangya/awesome-copycats-manjaro/refs/heads/nord/install.sh
+```
+
+Make the script executable:
+
+.. code-block:: shell
+
+```
+chmod +x install.sh
+```
+
+Then run it:
+
+.. code-block:: shell
+
+```
+./install.sh
+```
+
+The script handles all installation steps and ensures your original configuration is safely backed up before making changes.
+
+---
 Before installing this configuration, you **must** install the following dependencies:
 
 1. **lain**
