@@ -158,7 +158,6 @@ Install **lain**:
 git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
 
 
----
 
 ## Main installation
 
@@ -177,7 +176,7 @@ If you prefer to remove all Git metadata during installation:
      mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
 
 
----
+
 
 Usage
 =====
