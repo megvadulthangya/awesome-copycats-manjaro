@@ -123,13 +123,13 @@ Install both dependencies from the AUR using your preferred helper:
 
 .. code-block:: shell
 
-yay -S awesome-freedesktop-git lain-git
+	yay -S awesome-freedesktop-git lain-git
 # or
 .. code-block:: shell
-paru -S awesome-freedesktop-git lain-git
+	paru -S awesome-freedesktop-git lain-git
 # or (Manjaro)
 .. code-block:: shell
-pamac install awesome-freedesktop-git lain-git
+	pamac install awesome-freedesktop-git lain-git
 
 
 ### Debian-based and other distributions
@@ -139,7 +139,7 @@ Install **awesome-freedesktop** manually:
 .. code-block:: shell
 
 
-git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
+	git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
 
 
 Or install it via LuaRocks:
@@ -147,7 +147,7 @@ Or install it via LuaRocks:
 .. code-block:: shell
 
 
-luarocks install lcpz/awesome-freedesktop
+	luarocks install lcpz/awesome-freedesktop
 
 
 Install **lain**:
@@ -155,7 +155,7 @@ Install **lain**:
 .. code-block:: shell
 
 
-git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
+	git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
 
 
 
@@ -164,8 +164,8 @@ git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
 .. code-block:: shell
 
 
-git clone --branch nord --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
-mkdir -p ~/.config/awesome && mv -bv awesome-copycats-manjaro/{*,.[^.]*} ~/.config/awesome && rm -rf awesome-copycats-manjaro
+	git clone --branch nord --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
+	mkdir -p ~/.config/awesome && mv -bv awesome-copycats-manjaro/{*,.[^.]*} ~/.config/awesome && rm -rf awesome-copycats-manjaro
 
 
 If you prefer to remove all Git metadata during installation:
