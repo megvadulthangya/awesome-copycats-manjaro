@@ -124,12 +124,12 @@ Install both dependencies from the AUR using your preferred helper:
 .. code-block:: shell
 
 	yay -S awesome-freedesktop-git lain-git
-# or
+**or**
 
 .. code-block:: shell
 
 	paru -S awesome-freedesktop-git lain-git
-# or (Manjaro)
+**or (Manjaro)**
 
 .. code-block:: shell
 
