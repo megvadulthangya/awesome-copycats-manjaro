@@ -104,10 +104,10 @@ Screenshots for each theme showcasing the unified Nordic color palette...
 
 .. image:: screenshots/vertex.png
 
----
 
-# Installation
 
+Installation
+============
 Before installing this configuration, you **must** install the following dependencies:
 
 1. **lain**
@@ -170,8 +170,8 @@ Install **lain**:
 
 
 
-## Main installation
-
+Main installation
+=================
 .. code-block:: shell
 
 
