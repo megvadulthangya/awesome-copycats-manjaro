@@ -144,7 +144,7 @@ Install **awesome-freedesktop** manually:
 
 
 	[ -e ~/.config/awesome/freedesktop ] && rm -rf ~/.config/awesome/freedesktop
-git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
+	git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
 
 
 
@@ -164,7 +164,7 @@ Install **lain**:
 
 
 	[ -e ~/.config/awesome/lain ] && rm -rf ~/.config/awesome/lain
-git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
+	git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
 
 
 
