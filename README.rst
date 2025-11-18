@@ -115,9 +115,9 @@ Before installing this configuration, you **must** install the following depende
 
 These packages are required to ensure the correct operation of widgets, layouts, and freedesktop integrations.
 
-## Prerequisites
+ **Prerequisites**
 
-### Arch-based distributions
+ **Arch-based distributions**
 
 Install both dependencies from the AUR using your preferred helper:
 
