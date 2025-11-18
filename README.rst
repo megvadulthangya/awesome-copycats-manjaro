@@ -143,7 +143,10 @@ Install **awesome-freedesktop** manually:
 .. code-block:: shell
 
 
-	git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
+	[ -e ~/.config/awesome/freedesktop ] && rm -rf ~/.config/awesome/freedesktop; \
+git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
+
+
 
 
 Or install it via LuaRocks:
@@ -159,7 +162,9 @@ Install **lain**:
 .. code-block:: shell
 
 
-	git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
+	g[ -e ~/.config/awesome/lain ] && rm -rf ~/.config/awesome/lain; \
+git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
+
 
 
 
