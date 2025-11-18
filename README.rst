@@ -109,9 +109,9 @@ Screenshots for each theme showcasing the unified Nordic color palette...
 Installation
 ============
 
----
 
-## **Optional: Automated installation via install.sh**
+
+**Optional: Automated installation via install.sh**
 
 For users who prefer a fully automated setup, an installation script is available.
 This script performs the following actions:
@@ -125,29 +125,26 @@ To use the script, download it with `wget`:
 
 .. code-block:: shell
 
-```
-wget https://raw.githubusercontent.com/megvadulthangya/awesome-copycats-manjaro/refs/heads/nord/install.sh
-```
+	wget https://raw.githubusercontent.com/megvadulthangya/awesome-copycats-manjaro/refs/heads/nord/install.sh
+
 
 Make the script executable:
 
 .. code-block:: shell
 
-```
-chmod +x install.sh
-```
+	chmod +x install.sh
 
 Then run it:
 
 .. code-block:: shell
 
-```
-./install.sh
-```
+
+	./install.sh
 
 The script handles all installation steps and ensures your original configuration is safely backed up before making changes.
 
----
+**Or you can choose the hard way:**
+
 Before installing this configuration, you **must** install the following dependencies:
 
 1. **lain**
