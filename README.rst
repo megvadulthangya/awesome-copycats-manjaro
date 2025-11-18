@@ -109,7 +109,7 @@ Installation
 
 .. code-block:: shell
 
-    git clone --branch Autoinstall --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
+    git clone --branch nord --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
     mkdir -p ~/.config/awesome && mv -bv awesome-copycats-manjaro/{*,.[^.]*} ~/.config/awesome &&  rm -rf awesome-copycats-manjaro
 
 In case you do not want the Git files, use the following as the second command:

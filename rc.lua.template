@@ -126,7 +126,7 @@ run_once({
 -- Starts the KDE Connect system tray indicator, providing a visual way to manage the connection and access its features
 --	"kdeconnect-indicator",
 -- Starts the Gsconnect-backround service.
-        "gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js"
+	"gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js"
 -- Starts Manjaro Hello
 --	"/usr/bin/manjaro-hello",
 -- Start install script
@@ -492,10 +492,10 @@ globalkeys = mytable.join(
         end
     end, {description = "restore minimized", group = "client"}),
 
--- Dropdown application - Tilix Quake mode
-   awful.key({ modkey }, "z", function () 
-       awful.spawn("tilix --quake")
-   end, {description = "dropdown terminal", group = "launcher"}),
+	-- Dropdown application - Tilix Quake mode
+    awful.key({ modkey }, "z", function () 
+        awful.spawn("tilix --quake")
+    end, {description = "dropdown terminal", group = "launcher"}),
 
 --[[
     -- Dropdown application
@@ -946,5 +946,6 @@ tag.connect_signal("property::selected", backham)
 --==Aesthetics (Wallpaper)==--
 -- This lines would set the desktop background using the 'feh' utility, picking a random image
 --awful.spawn.with_shell("feh --randomize --bg-fill ~/.wallpapers/*")
-awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/*")
-awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/wallpapers/*")
+--awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/*")
+--awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/wallpapers/*")
+awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/nordic-wallpapers-git*")
