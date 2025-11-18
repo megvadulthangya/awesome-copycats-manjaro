@@ -104,19 +104,79 @@ Screenshots for each theme showcasing the unified Nordic color palette...
 
 .. image:: screenshots/vertex.png
 
-Installation
-============
+---
+
+# Installation
+
+Before installing this configuration, you **must** install the following dependencies:
+
+1. **lain**
+2. **awesome-freedesktop**
+
+These packages are required to ensure the correct operation of widgets, layouts, and freedesktop integrations.
+
+## Prerequisites
+
+### Arch-based distributions
+
+Install both dependencies from the AUR using your preferred helper:
 
 .. code-block:: shell
 
-    git clone --branch nord --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
-    mkdir -p ~/.config/awesome && mv -bv awesome-copycats-manjaro/{*,.[^.]*} ~/.config/awesome &&  rm -rf awesome-copycats-manjaro
+```
+yay -S awesome-freedesktop-git lain-git
+# or
+paru -S awesome-freedesktop-git lain-git
+# or (Manjaro)
+pamac install awesome-freedesktop-git lain-git
+```
 
-In case you do not want the Git files, use the following as the second command:
+### Debian-based and other distributions
+
+Install **awesome-freedesktop** manually:
 
 .. code-block:: shell
 
-    mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
+```
+git clone https://github.com/lcpz/awesome-freedesktop.git ~/.config/awesome/freedesktop
+```
+
+Or install it via LuaRocks:
+
+.. code-block:: shell
+
+```
+luarocks install lcpz/awesome-freedesktop
+```
+
+Install **lain**:
+
+.. code-block:: shell
+
+```
+git clone https://github.com/lcpz/lain.git ~/.config/awesome/lain
+```
+
+---
+
+## Main installation
+
+.. code-block:: shell
+
+```
+git clone --branch nord --recurse-submodules --remote-submodules --depth 1 -j 2 https://github.com/megvadulthangya/awesome-copycats-manjaro.git
+mkdir -p ~/.config/awesome && mv -bv awesome-copycats-manjaro/{*,.[^.]*} ~/.config/awesome && rm -rf awesome-copycats-manjaro
+```
+
+If you prefer to remove all Git metadata during installation:
+
+.. code-block:: shell
+
+```
+mv -bv awesome-copycats-manjaro/* ~/.config/awesome; rm -rf awesome-copycats-manjaro
+```
+
+---
 
 Usage
 =====
