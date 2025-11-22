@@ -948,4 +948,5 @@ tag.connect_signal("property::selected", backham)
 --awful.spawn.with_shell("feh --randomize --bg-fill ~/.wallpapers/*")
 --awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/*")
 --awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/wallpapers/*")
-awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/nordic-wallpapers-git*")
+awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/nordic-backgrounds*")
+
