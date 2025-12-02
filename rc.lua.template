@@ -1,7 +1,7 @@
 --[[
 
-     Awesome WM configuration template
-     github.com/lcpz
+      Awesome WM configuration template
+      github.com/lcpz
 
 --]]
 
@@ -18,7 +18,9 @@ local wibox         = require("wibox")
 local beautiful     = require("beautiful")
 local naughty       = require("naughty")
 local lain          = require("lain")
+--local bling         = require("bling") -- HOZZÁADVA: Bling modul az animációkhoz
 --local menubar       = require("menubar")
+local scratch       = require("scratch")
 local freedesktop   = require("freedesktop")
 local hotkeys_popup = require("awful.hotkeys_popup")
                       require("awful.hotkeys_popup.keys")
@@ -79,7 +81,7 @@ run_once({
 -- Starts the 'xss-lock' daemon. It first sets the display power management idle time (xset s).
 -- The 'safe-lock.sh' script is executed when the system locks, and the xss-lock setup
 -- will prevent locking while media (MPV, Grayjay, browser) is playing.
-	"xset s " .. idle_seconds .. " " .. idle_seconds .. "; xss-lock -- /usr/local/bin/safe-lock.sh",
+    "xset s " .. idle_seconds .. " " .. idle_seconds .. "; xss-lock -- /usr/local/bin/safe-lock.sh",
 -- Ensures GTK appearance settings (icons/themes for Thunar, mouse cursor, fonts) 
 -- are applied in the AwesomeWM session. It only starts the daemon if it's not already running.
 --        "xfsettingsd",
@@ -87,52 +89,50 @@ run_once({
 --    "GDK_BACKEND=x11 pamac-tray",
 -- Starts the LXQt PolicyKit authentication agent. This agent handles privilege requests, 
 -- providing the graphical password prompt for tasks requiring system administrator permissions.
---	"lxqt-policykit-agent",
+--    "lxqt-policykit-agent",
 --Starts the mate Policykit authentication agent.
---	"/usr/lib/mate-polkit/polkit-mate-authentication-agent-1",
+--    "/usr/lib/mate-polkit/polkit-mate-authentication-agent-1",
 -- Starts the Legacy gnome Polkit authentication agent to handle privilege requests (e.g., password prompt for system changes).
-	"/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
+    "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
 -- This line would start the KDE Polkit authentication agent, an alternative to polkit-gnome-au (used above) for handling privilege escalation requests.
-	--"polkit-kde-authentication-agent-1"
+    --"polkit-kde-authentication-agent-1"
 -- Starts the NetworkManager Applet. This is a GTK-based application that provides 
 -- a graphical icon in the system tray (systray) for monitoring network status, 
 -- managing connections (Wi-Fi, Wired, VPN), and configuring network settings.
---	"nm-applet",
+--    "nm-applet",
 -- This line would typically start 'picom', a standalone compositor used for managing
 -- shadows, transparency, and tearing (it provides the visual effects for the desktop).
---	"picom",
+--    "picom",
 -- Runs 'unclutter' to automatically hide the mouse cursor when it is not being moved
 -- (i.e., when you are actively typing or not using the mouse). The '-root' flag
 -- ensures it works across the entire root window.
-	"unclutter -root",
+    "unclutter -root",
 -- Updates the D-Bus activation environment to include necessary systemd variables
 -- like DISPLAY and WAYLAND_DISPLAY, ensuring applications started via D-Bus
 -- (or systemd) can correctly display graphics.
-	"dbus-update-activation-environment --systemd DISPLAY XAUTHORITY WAYLAND_DISPLAY",
---starting the quake style terminal emulator.
-	"tilda",
+    "dbus-update-activation-environment --systemd DISPLAY XAUTHORITY WAYLAND_DISPLAY",
 
 --== Wallets (Credential Management) ==--
 -- Runs the pam_kwallet initialization script. This integrates KWallet with PAM (Pluggable Authentication Modules),
 -- allowing KWallet to automatically unlock when the user logs in, based on the login password.
---	"/usr/lib/pam_kwallet_init",
+--    "/usr/lib/pam_kwallet_init",
 -- Starts the KWallet D-Bus service itself. This service manages and stores sensitive user information (like passwords).
---	"kwalletd6",
+--    "kwalletd6",
 -- Starts the KWallet Manager application, which is the graphical interface for managing the wallets and stored credentials.
---	"kwalletmanager6",
+--    "kwalletmanager6",
 
 --== KDE Integration ==--
 -- Starts the KDE Connect daemon. This service allows for integration between the desktop and mobile devices (Android/iOS),
 -- providing features like notification sync, shared clipboard, and file transfer.
---	"kdeconnectd",
+--    "kdeconnectd",
 -- Starts the KDE Connect system tray indicator, providing a visual way to manage the connection and access its features
---	"kdeconnect-indicator",
+--    "kdeconnect-indicator",
 -- Starts the Gsconnect-backround service.
-	"gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js"
+    "gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js"
 -- Starts Manjaro Hello
---	"/usr/bin/manjaro-hello",
+--    "/usr/bin/manjaro-hello",
 -- Start install script
---	"/bin/bash/ -c `sleep 10 && $HOME/awesome-setup-wrapper.sh`"
+--    "/bin/bash/ -c `sleep 10 && $HOME/awesome-setup-wrapper.sh`"
  }) -- comma-separated entries
 
 -- This function implements the XDG autostart specification
@@ -171,6 +171,7 @@ local vi_focus     = false -- vi-like client focus https://github.com/lcpz/aweso
 local cycle_prev   = true  -- cycle with only the previously focused client or all https://github.com/lcpz/awesome-copycats/issues/274
 local editor       = os.getenv("EDITOR") or "nano"
 local browser      = "brave"
+
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
@@ -309,10 +310,7 @@ end)
 screen.connect_signal("arrange", function (s)
     local only_one = #s.tiled_clients == 1
     for _, c in pairs(s.clients) do
-        -- Kivétel hozzáadása a Tildának:
-        if c.class == "Tilda" then
-            c.border_width = 0
-        elseif only_one and not c.floating or c.maximized or c.fullscreen then
+        if only_one and not c.floating or c.maximized or c.fullscreen then
             c.border_width = 0
         else
             c.border_width = beautiful.border_width
@@ -339,7 +337,7 @@ root.buttons(mytable.join(
 
 globalkeys = mytable.join(
     -- Destroy all notifications
-    awful.key({ "Control",           }, "space", function() naughty.destroy_all_notifications() end,
+    awful.key({ "Control",            }, "space", function() naughty.destroy_all_notifications() end,
               {description = "destroy all notifications", group = "hotkeys"}),
     -- Take a screenshot
     awful.key({}, "Print", function () awful.util.spawn("flameshot gui") end,
@@ -350,15 +348,15 @@ globalkeys = mytable.join(
               {description = "lock screen", group = "hotkeys"}),
 
     -- Show help
-    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
+    awful.key({ modkey,            }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
 
     -- Tag browsing
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
+    awful.key({ modkey,            }, "Left",    awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
+    awful.key({ modkey,            }, "Right",   awful.tag.viewnext,
               {description = "view next", group = "tag"}),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
+    awful.key({ modkey,            }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
 
     -- Non-empty tag browsing
@@ -368,13 +366,13 @@ globalkeys = mytable.join(
               {description = "view  previous nonempty", group = "tag"}),
 
     -- Default client focus
-    awful.key({ altkey,           }, "j",
+    awful.key({ altkey,            }, "j",
         function ()
             awful.client.focus.byidx( 1)
         end,
         {description = "focus next by index", group = "client"}
     ),
-    awful.key({ altkey,           }, "k",
+    awful.key({ altkey,            }, "k",
         function ()
             awful.client.focus.byidx(-1)
         end,
@@ -408,7 +406,7 @@ globalkeys = mytable.join(
         {description = "focus right", group = "client"}),
 
     -- Menu
-    awful.key({ modkey,           }, "w", function () awful.util.mymainmenu:show() end,
+    awful.key({ modkey,            }, "w", function () awful.util.mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation
@@ -420,9 +418,9 @@ globalkeys = mytable.join(
               {description = "focus the next screen", group = "screen"}),
     awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
               {description = "focus the previous screen", group = "screen"}),
-    awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
+    awful.key({ modkey,            }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
-    awful.key({ modkey,           }, "Tab",
+    awful.key({ modkey,            }, "Tab",
         function ()
             if cycle_prev then
                 awful.client.focus.history.previous()
@@ -465,7 +463,7 @@ globalkeys = mytable.join(
               {description = "delete tag", group = "tag"}),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+    awful.key({ modkey,            }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -484,7 +482,7 @@ globalkeys = mytable.join(
               {description = "increase the number of columns", group = "layout"}),
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
+    awful.key({ modkey,            }, "space", function () awful.layout.inc( 1)                end,
               {description = "select next", group = "layout"}),
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
               {description = "select previous", group = "layout"}),
@@ -497,16 +495,15 @@ globalkeys = mytable.join(
         end
     end, {description = "restore minimized", group = "client"}),
 
-	-- Dropdown application - Tilda Quake Terminal
---    awful.key({ modkey }, "z", function () 
---        awful.spawn("tilda") 
---    end, {description = "Tilda dropdown", group = "launcher"}),
-
---[[
     -- Dropdown application
-    awful.key({ modkey, }, "z", function () awful.screen.focused().quake:toggle() end,
-              {description = "dropdown application", group = "launcher"}),
---]]
+    -- awful.key({ modkey, }, "z", function () awful.screen.focused().quake:toggle() end,
+    --           {description = "dropdown application", group = "launcher"}),
+    -- Scratchpad / Quake Terminal (Super 0-on hun keyboard...)
+    awful.key({ modkey }, "#49", function() 
+        scratch.toggle("env QUAKE_MODE=1 urxvt -name scratchpad", {instance = "scratchpad"}) 
+    end,
+    {description = "toggle quake terminal", group = "launcher"}),
+
     -- Widgets popups
     awful.key({ altkey, }, "c", function () if beautiful.cal then beautiful.cal.show(7) end end,
               {description = "show calendar", group = "widgets"}),
@@ -684,7 +681,7 @@ globalkeys = mytable.join(
     clientkeys = mytable.join(
     awful.key({ altkey, "Shift"   }, "m",      lain.util.magnify_client,
               {description = "magnify client", group = "client"}),
-    awful.key({ modkey,           }, "f",
+    awful.key({ modkey,             }, "f",
         function (c)
             c.fullscreen = not c.fullscreen
             c:raise()
@@ -696,18 +693,18 @@ globalkeys = mytable.join(
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
               {description = "move to master", group = "client"}),
-    awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
+    awful.key({ modkey,             }, "o",      function (c) c:move_to_screen()                 end,
               {description = "move to screen", group = "client"}),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
+    awful.key({ modkey,             }, "t",      function (c) c.ontop = not c.ontop              end,
               {description = "toggle keep on top", group = "client"}),
-    awful.key({ modkey,           }, "n",
+    awful.key({ modkey,             }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
             -- minimized, since minimized clients can't have the focus.
             c.minimized = true
         end ,
         {description = "minimize", group = "client"}),
-    awful.key({ modkey,           }, "m",
+    awful.key({ modkey,             }, "m",
         function (c)
             c.maximized = not c.maximized
             c:raise()
@@ -812,7 +809,7 @@ awful.rules.rules = {
                      screen = awful.screen.preferred,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
                      size_hints_honor = false
-     }
+      }
     },
 
     -- Floating clients.
@@ -845,30 +842,55 @@ awful.rules.rules = {
           "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
         }
       }, properties = { floating = true }},
--- Tilda speciális szabályok (Quake style)
-    { rule = { class = "Tilda" },
-      properties = { 
-          floating = true,
-          sticky = true,    -- Minden workspace-en látszódjon
-          ontop = true,     -- Mindig legfelül legyen
-          border_width = 0, -- Ne legyen kerete
-          titlebars_enabled = false, -- Ne legyen címsora
-          focus = true      -- Kapja meg a fókuszt, ha megjelenik
-      }
-    },
-
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
-      },
-      except_any = { class = { "Tilda" } }, -- <<<< EZT A SORT SZÚRD BE IDE
-      properties = { titlebars_enabled = true }
+      }, properties = { titlebars_enabled = true }
     },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { screen = 1, tag = "2" } },
-}
+    -- ==========================================================
+    -- 1. JAVÍTÁS: NORMÁL URXVT FIX (Hogy ne legyen 2 centis csík)
+    -- ==========================================================
+    { rule = { class = "URxvt" },
+      properties = { 
+          size_hints_honor = false,
+          titlebars_enabled = false
+      }
+    }, -- <--- ITT VOLT A GOND VALÓSZÍNŰLEG (ez a vessző választja el a két szabályt)
 
+    -- ==========================================================
+    -- 2. JAVÍTÁS: SCRATCHPAD (Quake Style + Fix első indítás)
+    -- ==========================================================
+    { rule = { instance = "scratchpad" },
+      properties = { 
+          floating = true,
+          sticky = true,       -- Minden asztalon ott legyen
+          ontop = true,        -- Mindig legfelül
+          minimizable = true,
+          border_width = 0,    -- Nincs keret (mert 100% széles)
+          size_hints_honor = false,
+          titlebars_enabled = false
+      }, -- Itt a tulajdonságok vége, jön a vessző
+      
+      -- Ez a logika fut le, amikor ELŐSZÖR jön létre az ablak
+      callback = function (c)
+          -- A gears.timer.delayed_call biztosítja, hogy ez fusson le UTOLJÁRA
+          -- Így biztosan felülírja az alapértelmezett méretet.
+          gears.timer.delayed_call(function()
+          local s_geo = c.screen.geometry
+          c:geometry({
+              x = s_geo.x,
+              y = s_geo.y,
+              width = s_geo.width,
+              height = s_geo.height * 0.5 -- 50% magasság
+          })
+      end)
+  end
+    } -- Ez az utolsó szabály, ide nem kötelező vessző, de nem is baj
+
+} -- <--- EZ ZÁRJA LE AZ awful.rules.rules TÁBLÁT (kb. a 883. sor)
 -- }}}
 
 -- {{{ Signals
@@ -959,13 +981,47 @@ client.connect_signal("unmanage", backham)
 -- ensure there is always a selected client during tag switching or logins
 tag.connect_signal("property::selected", backham)
 
+-- HOZZÁADVA: Univerzális Geometria a Quake Terminálhoz
+-- Ez biztosítja, hogy felbontástól függetlenül mindig középen legyen
+client.connect_signal("manage", function(c)
+    if c.instance == "scratchpad" then
+        
+        -- Kiszámoljuk az aktuális képernyő méreteit
+        local screen_geom = awful.screen.focused().geometry
+        
+        -- BEÁLLÍTÁSOK (Itt módosíthatod az arányokat)
+        local width_ratio = 0.95  -- A képernyő szélességének 95%-a
+        local height_ratio = 0.50 -- A képernyő magasságának 50%-a
+        
+        -- Matek: Kiszámoljuk a pixel méreteket
+        local w = screen_geom.width * width_ratio
+        local h = screen_geom.height * height_ratio
+        
+        -- Matek: Kiszámoljuk az X pozíciót, hogy Középen legyen
+        -- (Képernyő szélessége - Ablak szélessége) / 2 + Képernyő eltolása
+        local x = (screen_geom.width - w) / 2 + screen_geom.x
+        
+        -- Beállítjuk az ablakot
+        c:geometry({
+            x = x,
+            y = screen_geom.y + 10, -- Kicsi margó fentről
+            width = w,
+            height = h
+        })
+
+        -- Ez kikapcsolja a terminál rács-igazítását
+        c.size_hints_honor = false 
+        
+        -- Levesszük a keretet
+        c.border_width = 0
+    end
+end)
+
 -- }}}
 --==Aesthetics (Wallpaper)==--
 -- This lines would set the desktop background using the 'feh' utility, picking a random image
 --awful.spawn.with_shell("feh --randomize --bg-fill ~/.wallpapers/*")
---awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/*")
+--awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/bac-- {{{ Key bindingskgrounds/*")
 --awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/wallpapers/*")
 --awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/nordic-backgrounds*")
 awful.spawn.with_shell("feh --bg-fill /usr/share/backgrounds/nordic-backgrounds/ign_manjaro.jpg")
-
-
