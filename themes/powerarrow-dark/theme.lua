@@ -228,10 +228,29 @@ theme.volume.widget:buttons(awful.util.table.join(
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net({
     settings = function()
+        -- Segédfüggvény: BIT alapú sebesség (Speedtest stílus)
+        local function format_speed_bits(speed_kb_per_sec)
+            -- 1. Átváltás Kilobyte-ról Kilobit-re (* 8)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            
+            if speed_kbit >= 1000000 then -- Ha nagyobb mint 1 Gigabit (1000*1000)
+                -- Osztjuk 1 millióval, hogy Gbps legyen
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Ha nagyobb mint 1 Megabit
+                -- Osztjuk 1000-rel, hogy Mbps legyen
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Különben marad Kilobit
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
         widget:set_markup(markup.font(theme.font,
-                          markup("#A3BE8C", " " .. string.format("%06.1f", net_now.received))
+                          markup("#A3BE8C", " ↓" .. received)
                           .. " " ..
-                          markup("#81A1C1", " " .. string.format("%06.1f", net_now.sent) .. " ")))
+                          markup("#81A1C1", " ↑" .. sent) .. " "))
     end
 })
 
@@ -312,7 +331,14 @@ function theme.at_screen_connect(s)
             arrl_ld,
             wibox.container.background(neticon, theme.bg_focus),
             wibox.container.background(net.widget, theme.bg_focus),
-            arrl_dl,
+            -- Itt váltunk sötét (átlátszó/alap) háttérre
+            arrl_dl, 
+            
+            -- IDŐJÁRÁS WIDGET
+            theme.weather_widget,
+            spr,
+            
+            -- ÓRA
             clock,
             spr,
             arrl_ld,
