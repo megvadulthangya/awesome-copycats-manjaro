@@ -10,6 +10,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -35,7 +36,13 @@ theme.nord14 = "#A3BE8C"  -- green
 theme.nord15 = "#B48EAD"  -- purple
 
 theme.confdir = os.getenv("HOME") .. "/.config/awesome/themes/multicolor"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
 theme.wallpaper = theme.confdir .. "/wall.png"
+-- ============================================================================
+
 theme.font = "Terminus 12"
 
 -- Main colors
@@ -190,14 +197,33 @@ theme.volume = lain.widget.alsa({
     end
 })
 
--- Net with Nord colors
+-- Net with Nord colors (MODERNIZÁLT - Speedtest stílus)
 local netdownicon = wibox.widget.imagebox(theme.widget_netdown)
-local netdowninfo = wibox.widget.textbox()
+local netdowninfo = wibox.widget.textbox() -- Ez csak egy üres textbox, a lain widget ír bele
 local netupicon = wibox.widget.imagebox(theme.widget_netup)
 local netupinfo = lain.widget.net({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, theme.nord11, net_now.sent .. " "))
-        netdowninfo:set_markup(markup.fontfg(theme.font, theme.nord14, net_now.received .. " "))
+        -- Segédfüggvény: BIT alapú sebesség
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            if speed_kbit >= 1000000 then -- Gigabit
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Megabit
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Kilobit
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
+        -- Két külön widgetbe írjuk a két értéket (ahogy a Multicolor témánál szokás)
+        -- Feltöltés (widget, amihez a netupinfo csatolva van)
+        widget:set_markup(markup.fontfg(theme.font, theme.nord11, sent .. " "))
+        
+        -- Letöltés (a különálló netdowninfo widgetbe írjuk)
+        netdowninfo:set_markup(markup.fontfg(theme.font, theme.nord14, received .. " "))
     end
 })
 
@@ -239,16 +265,22 @@ theme.mpd = lain.widget.mpd({
     end
 })
 
+-- WEATHER WIDGET (Ikonnal)
+-- Használjuk a multicolor téma "dish" (tányér/antenna) ikonját az időjáráshoz
+local weathericon = wibox.widget.imagebox(theme.widget_weather)
+
 function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -308,6 +340,10 @@ function theme.at_screen_connect(s)
             temp.widget,
             baticon,
             bat.widget,
+            -- IDŐJÁRÁS WIDGET (Ikon + Szöveg)
+            weathericon,
+            beautiful.weather_widget,
+            --
             clockicon,
             mytextclock,
         },

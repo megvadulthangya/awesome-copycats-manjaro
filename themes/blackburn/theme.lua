@@ -11,13 +11,22 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Kell a weather widgethez
 
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/blackburn"
-theme.wallpaper                                 = theme.dir .. "/wall.png"
+
+-- ============================================================================
+-- HÁTTÉRKÉP BEÁLLÍTÁS
+-- ============================================================================
+-- Kikommenteltem, hogy a 'feh' parancsod érvényesüljön az rc.lua-ból!
+-- Ha vissza akarod kapni a téma eredeti hátterét, vedd ki a '--' jeleket a sor elejéről.
+-- theme.wallpaper                                 = theme.dir .. "/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Terminus 12"
 theme.taglist_font                              = "Icons 12"
 
@@ -39,19 +48,19 @@ theme.nord13 = "#EBCB8B"  -- yellow
 theme.nord14 = "#A3BE8C"  -- green
 theme.nord15 = "#B48EAD"  -- purple
 
--- Nord narancs használata a fókusz színekhez
+-- Színek
 theme.fg_normal                                 = theme.nord4
-theme.fg_focus                                  = theme.nord12  -- Nord narancs
+theme.fg_focus                                  = theme.nord12
 theme.bg_normal                                 = theme.nord0
 theme.bg_focus                                  = theme.nord0
 theme.fg_urgent                                 = theme.nord11
 theme.bg_urgent                                 = theme.nord1
 theme.border_width                              = dpi(1)
 theme.border_normal                             = theme.nord1
-theme.border_focus                              = theme.nord12  -- Nord narancs
-theme.taglist_fg_focus                          = theme.nord12  -- Nord narancs
+theme.border_focus                              = theme.nord12
+theme.taglist_fg_focus                          = theme.nord12
 theme.taglist_bg_focus                          = theme.nord0
-theme.tasklist_fg_focus                         = theme.nord12  -- Nord narancs
+theme.tasklist_fg_focus                         = theme.nord12
 theme.tasklist_bg_focus                         = theme.nord0
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
@@ -99,7 +108,7 @@ awful.util.tagnames   = { "ƀ", "Ƅ", "Ɗ", "ƈ", "ƙ" }
 
 local markup     = lain.util.markup
 local separators = lain.util.separators
-local gray       = theme.nord3  -- Nord szürke árnyalat
+local gray       = theme.nord3
 
 -- Textclock
 local mytextclock = wibox.widget.textclock(" %H:%M ")
@@ -160,6 +169,30 @@ theme.volume = lain.widget.alsa({
     end
 })
 
+-- Net (Speedtest stílus: Mbps/Gbps)
+local net = lain.widget.net({
+    settings = function()
+        -- Segédfüggvény: BIT alapú sebesség
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            
+            if speed_kbit >= 1000000 then -- Gigabit
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Megabit
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Kilobit
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+        local header   = " Net "
+
+        widget:set_markup(markup.font(theme.font, markup(gray, header) .. received .. "↓ " .. sent .. "↑ "))
+    end
+})
+
 -- Separators
 local first     = wibox.widget.textbox('<span font="Terminus 4"> </span>')
 local arrl_pre  = separators.arrow_right("alpha", theme.nord1)
@@ -182,23 +215,24 @@ theme.titlebar_bg_focus = gears.color({
 })
 
 function theme.at_screen_connect(s)
-    -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- HÁTTÉRKÉP LOGIKA JAVÍTVA
+    -- Mivel a theme.wallpaper fent ki van kommentelve (értéke nil),
+    -- ez a blokk nem fut le, így az Awesome nem nyúl a háttérhez.
+    -- Ez hagyja érvényesülni a 'feh'-et.
+    if theme.wallpaper then
+        local wallpaper = theme.wallpaper
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
 
-    -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
-    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(my_table.join(
                            awful.button({}, 1, function () awful.layout.inc( 1) end),
@@ -207,16 +241,11 @@ function theme.at_screen_connect(s)
                            awful.button({}, 4, function () awful.layout.inc( 1) end),
                            awful.button({}, 5, function () awful.layout.inc(-1) end)))
 
-    -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
-
-    -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, { bg_normal = barcolor, bg_focus = barcolor })
 
-    -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = barcolor })
 
-    -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
@@ -235,8 +264,10 @@ function theme.at_screen_connect(s)
             wibox.widget.systray(),
             first,
             theme.mpd.widget,
+            net.widget,
             bat,
             theme.volume.widget,
+            beautiful.weather_widget,
             mytextclock,
         },
     }

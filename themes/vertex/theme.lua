@@ -12,6 +12,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local math, string, tag, tonumber, type, os = math, string, tag, tonumber, type, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -19,7 +20,13 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
 theme.icon_dir                                  = os.getenv("HOME") .. "/.config/awesome/themes/vertex/icons"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
 theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/themes/vertex/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Roboto Bold 12"
 theme.taglist_font                              = "FontAwesome 17"
 -- Nordic color scheme
@@ -117,6 +124,11 @@ local markup = lain.util.markup
 --os.setlocale(os.getenv("LANG")) -- to localize the clock
 local mytextclock = wibox.widget.textclock(markup("#E5E9F0", "%a %d %b, %H:%M"))
 mytextclock.font = theme.font
+local clock_icon = wibox.widget.imagebox(theme.clock)
+local clockbg = wibox.container.background(mytextclock, theme.bg_focus, gears.shape.rectangle)
+local clockwidget = wibox.container.margin(clockbg, dpi(0), dpi(3), dpi(5), dpi(5))
+
+-- Calendar
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock },
     notification_preset = {
@@ -172,11 +184,11 @@ theme.mpd = lain.widget.mpd({
     music_dir = "/mnt/storage/Downloads/Music",
     settings = function()
         if mpd_now.state == "play" then
-            title = mpd_now.title
-            artist  = "  " .. mpd_now.artist  .. " "
+            artist = mpd_now.artist .. " "
+            title  = mpd_now.title  .. " "
         elseif mpd_now.state == "pause" then
-            title = "mpd "
-            artist  = "paused "
+            artist = "mpd "
+            title  = "paused "
         else
             title  = ""
             artist = ""
@@ -275,17 +287,8 @@ local mywifisig = awful.widget.watch(
 )
 wificon:connect_signal("button::press", function() awful.spawn(string.format("%s -e wavemon", awful.util.terminal)) end)
 
--- Weather
---[[ to be set before use
-theme.weather = lain.widget.weather({
-    city_id = 2643743, -- placeholder (London)
-    notification_preset = { font = "Monospace 10" },
-    settings = function()
-        units = math.floor(weather_now["main"]["temp"])
-        widget:set_markup(" " .. markup.font(theme.font, units .. "°C") .. " ")
-    end
-})
---]]
+-- Weather (ikon)
+local weathericon = wibox.widget.imagebox(theme.widget_weather) -- Használjuk a témában lévő ikonokat ha vannak
 
 -- Launcher
 local mylauncher = awful.widget.button({image = theme.awesome_icon})
@@ -341,7 +344,7 @@ end
 
 function theme.vertical_wibox(s)
     -- Create the vertical wibox
-    s.dockheight = (35 *  s.workarea.height)/100
+    s.dockheight = (35 * s.workarea.height)/100
 
     s.myleftwibox = wibox({ screen = s, x=0, y=s.workarea.height/2 - s.dockheight/2, width = dpi(6), height = s.dockheight, fg = theme.fg_normal, bg = barcolor2, ontop = true, visible = true, type = "dock" })
 
@@ -405,12 +408,14 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal, border = theme.border_width })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -430,12 +435,11 @@ function theme.at_screen_connect(s)
                            awful.button({}, 5, function () awful.layout.inc(-1) end)))
     s.layoutb = wibox.container.margin(s.mylayoutbox, dpi(8), dpi(11), dpi(3), dpi(3))
 
-    -- Create a taglist widget - JAVÍTOTT RÉSZ
+    -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons, {
         font = theme.taglist_font,
         shape = gears.shape.rectangle,
         spacing = dpi(10),
-        -- Itt javítjuk a taglist megjelenését
         bg_focus = taglist_bg_focus,
         bg_occupied = taglist_bg_occupied,
         bg_empty = theme.bg_normal,
@@ -447,7 +451,7 @@ function theme.at_screen_connect(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.focused, awful.util.tasklist_buttons, { bg_focus = "#00000000" })
 
-    -- Create the wibox - MÓDOSÍTOTT RÉSZ: itt most már Nordic színű a háttér
+    -- Create the wibox
     s.mywibox = awful.wibar({ 
         position = "top", 
         screen = s, 
@@ -474,8 +478,8 @@ function theme.at_screen_connect(s)
             layout = wibox.layout.fixed.horizontal,
             wibox.widget { nil, nil, theme.mpd.widget, layout = wibox.layout.align.horizontal },
             rspace0,
-            --theme.weather.icon,
-            --theme.weather.widget,
+            -- IDŐJÁRÁS WIDGET (rc.lua-ból jön)
+            beautiful.weather_widget,
             rspace1,
             wificon,
             rspace0,

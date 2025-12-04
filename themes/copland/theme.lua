@@ -11,13 +11,23 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local awesome, client, os = awesome, client, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/copland"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
+-- Ez ad egy biztonsági alapbeállítást.
+-- Ha az rc.lua-ban felül akarod bírálni (pl. feh-hel), akkor ott kell 
+-- beállítani a 'beautiful.wallpaper = nil' értéket a téma betöltése után.
 theme.wallpaper                                 = theme.dir .. "/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Terminus 12"
 -- Nord colors
 theme.fg_normal                                 = "#D8DEE9"  -- Nord4
@@ -53,6 +63,7 @@ theme.bat_no                                    = theme.dir .. "/icons/bat_no.pn
 theme.play                                      = theme.dir .. "/icons/play.png"
 theme.pause                                     = theme.dir .. "/icons/pause.png"
 theme.stop                                      = theme.dir .. "/icons/stop.png"
+theme.net                                       = theme.dir .. "/icons/net.png"
 theme.layout_tile                               = theme.dir .. "/icons/tile.png"
 theme.layout_tileleft                           = theme.dir .. "/icons/tileleft.png"
 theme.layout_tilebottom                         = theme.dir .. "/icons/tilebottom.png"
@@ -84,6 +95,8 @@ theme.titlebar_maximized_button_focus_active    = theme.dir .. "/icons/titlebar/
 theme.titlebar_maximized_button_normal_active   = theme.dir .. "/icons/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_inactive  = theme.dir .. "/icons/titlebar/maximized_focus_inactive.png"
 theme.titlebar_maximized_button_normal_inactive = theme.dir .. "/icons/titlebar/maximized_normal_inactive.png"
+theme.titlebar_minimize_button_focus            = theme.dir .. "/icons/titlebar/minimize_focus.png"
+theme.titlebar_minimize_button_normal           = theme.dir .. "/icons/titlebar/minimize_normal.png"
 
 -- lain related
 theme.layout_centerfair                         = theme.dir .. "/icons/centerfair.png"
@@ -251,13 +264,27 @@ theme.volume.bar:buttons(my_table.join (
 local volumebg = wibox.container.background(theme.volume.bar, "#434C5E", gears.shape.rectangle)  -- Nord2
 local volumewidget = wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
 
--- Weather
---[[ to be set before use
-theme.weather = lain.widget.weather({
-    --APPID =
-    city_id = 2643743, -- placeholder (London)
+-- Net Widget (Speedtest stílus: Mbps/Gbps)
+local neticon = wibox.widget.imagebox(theme.net)
+local net = lain.widget.net({
+    settings = function()
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            if speed_kbit >= 1000000 then -- Gbps
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Mbps
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Kbps
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
+        widget:set_markup(markup.font(theme.font, markup(blue, " ↓") .. received .. markup(blue, " ↑") .. sent .. " "))
+    end
 })
---]]
 
 -- Separators
 local first     = wibox.widget.textbox(markup.font("Terminus 3", " "))
@@ -279,12 +306,17 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    -- Megnézi a globális 'beautiful.wallpaper' változót.
+    -- Ha az rc.lua-ban 'nil'-re állítottad, akkor a téma NEM nyúl a háttérhez.
+    -- Így a 'feh' parancsod nyerhet.
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -334,11 +366,13 @@ function theme.at_screen_connect(s)
             baticon,
             batwidget,
             bar_spr,
-            --fsicon,
-            --fswidget,
+            neticon,
+            net.widget,
             bar_spr,
             volicon,
             volumewidget,
+            bar_spr,
+            beautiful.weather_widget,
             bar_spr,
             mytextclock,
         },

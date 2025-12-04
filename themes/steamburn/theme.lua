@@ -11,6 +11,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -18,7 +19,13 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.zenburn_dir                               = require("awful.util").get_themes_dir() .. "zenburn"
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/steamburn"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
 theme.wallpaper                                 = theme.dir .. "/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Terminus 12"
 -- Nord color scheme base colors
 theme.nord0  = "#2E3440"  -- darkest
@@ -33,7 +40,7 @@ theme.nord8  = "#88C0D0"
 theme.nord9  = "#81A1C1"
 theme.nord10 = "#5E81AC"
 theme.nord11 = "#BF616A"  -- aurora red
-theme.nord12 = "#D08770"  -- aurora orange (closest to original steamburn)
+theme.nord12 = "#D08770"  -- aurora orange
 theme.nord13 = "#EBCB8B"  -- aurora yellow
 theme.nord14 = "#A3BE8C"  -- aurora green
 theme.nord15 = "#B48EAD"  -- aurora purple
@@ -72,7 +79,7 @@ theme.layout_txt_magnifier                      = "[M]"
 theme.layout_txt_floating                       = "[|]"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.useless_gap                               = dpi(3)  -- Slightly increased for Nord aesthetic
+theme.useless_gap                               = 0 -- RÉS NÉLKÜL
 theme.titlebar_close_button_normal              = theme.zenburn_dir.."/titlebar/close_normal.png"
 theme.titlebar_close_button_focus               = theme.zenburn_dir.."/titlebar/close_focus.png"
 theme.titlebar_minimize_button_normal           = theme.zenburn_dir.."/titlebar/minimize_normal.png"
@@ -99,8 +106,7 @@ theme.layout_txt_termfair                       = "[termfair]"
 theme.layout_txt_centerfair                     = "[centerfair]"
 
 local markup = lain.util.markup
--- Updated gray to use Nord color
-local gray   = theme.nord3  -- Using nord3 for secondary text
+local gray   = theme.nord3 
 
 -- Textclock
 local mytextclock = wibox.widget.textclock(" %H:%M ")
@@ -157,12 +163,24 @@ local bat = lain.widget.bat({
     end
 })
 
--- Net checker
+-- Net checker (MODERN Mbps/Gbps - Steamburn stílus)
 local net = lain.widget.net({
     settings = function()
-        if net_now.state == "up" then net_state = "On"
-        else net_state = "Off" end
-        widget:set_markup(markup.font(theme.font, markup(gray, " Net ") .. net_state .. " "))
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            if speed_kbit >= 1000000 then -- Gbps
+                return string.format("%.1f Gb", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Mbps
+                return string.format("%.1f Mb", speed_kbit / 1000)
+            else -- Kbps
+                return string.format("%.0f Kb", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
+        widget:set_markup(markup.font(theme.font, markup(gray, " Net ") .. received .. "↓ " .. sent .. "↑ "))
     end
 })
 
@@ -187,29 +205,36 @@ local first = wibox.widget.textbox(markup.font("Terminus 4", " "))
 local spr   = wibox.widget.textbox(' ')
 
 local function update_txt_layoutbox(s)
-    -- Writes a string representation of the current layout in a textbox widget
     local txt_l = theme["layout_txt_" .. awful.layout.getname(awful.layout.get(s))] or ""
     s.mytxtlayoutbox:set_text(txt_l)
 end
 
 function theme.at_screen_connect(s)
-    -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
+
+    -- ====================================================================
+    -- MINDEN MARGÓ ÉS HÉZAG NULLÁZÁSA (SZELLEM SÁV ELLEN)
+    -- ====================================================================
+    -- Késleltetve, hogy biztosan működjön
+    gears.timer.delayed_call(function()
+        s.padding = { left = 0, right = 0, top = 0, bottom = 0 }
+    end)
+    -- ====================================================================
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
 
-    -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
 
-    -- Textual layoutbox
     s.mytxtlayoutbox = wibox.widget.textbox(theme["layout_txt_" .. awful.layout.getname(awful.layout.get(s))])
     awful.tag.attached_connect_signal(s, "property::selected", function () update_txt_layoutbox(s) end)
     awful.tag.attached_connect_signal(s, "property::layout", function () update_txt_layoutbox(s) end)
@@ -220,10 +245,7 @@ function theme.at_screen_connect(s)
                            awful.button({}, 4, function() awful.layout.inc(1) end),
                            awful.button({}, 5, function() awful.layout.inc(-1) end)))
 
-    -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
-
-    -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
 
     -- Create the wibox with Nord background
@@ -231,7 +253,7 @@ function theme.at_screen_connect(s)
         position = "top", 
         screen = s, 
         height = dpi(18),
-        bg = theme.nord0  -- Explicitly set Nord background
+        bg = theme.nord0
     })
 
     -- Add widgets to the wibox
@@ -255,11 +277,13 @@ function theme.at_screen_connect(s)
             cpu.widget,
             mem.widget,
             bat.widget,
-            net.widget,
+            net.widget, -- Hálózat (Új)
             theme.volume.widget,
+            beautiful.weather_widget, -- Időjárás (Új)
             mytextclock
         },
     }
+    -- ALSÓ SÁV KÓDJA TELJESEN TÖRÖLVE!
 end
 
 return theme

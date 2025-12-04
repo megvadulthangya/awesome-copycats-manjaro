@@ -12,13 +12,20 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/dremora"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
 theme.wallpaper                                 = theme.dir .. "/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Terminus 12"
 theme.taglist_font                              = "Icons 14"
 
@@ -174,6 +181,29 @@ theme.volume = lain.widget.alsa({
     end
 })
 
+-- Net Widget (Speedtest stílus: Mbps/Gbps)
+-- Dremora stílushoz igazítva: Szürke "Net" felirat, fehér érték
+local net = lain.widget.net({
+    settings = function()
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            if speed_kbit >= 1000000 then -- Gbps
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Mbps
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Kbps
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+        local header   = " Net "
+
+        widget:set_markup(markup.font(theme.font, markup(gray, header) .. markup(white, received .. "↓ " .. sent .. "↑ ")))
+    end
+})
+
 -- Separators with Nord colors
 local first     = wibox.widget.textbox('<span font="Terminus 4"> </span>')
 local arrl_pre  = separators.arrow_right("alpha", theme.nord1)
@@ -183,12 +213,15 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    -- Figyeli az rc.lua beautiful.wallpaper változóját
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -238,8 +271,10 @@ function theme.at_screen_connect(s)
             wibox.widget.systray(),
             first,
             theme.mpd.widget,
+            net.widget, -- Hálózat (Új)
             bat.widget,
             theme.volume.widget,
+            beautiful.weather_widget, -- Időjárás (Új)
             mytextclock,
         },
     }

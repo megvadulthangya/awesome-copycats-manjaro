@@ -12,6 +12,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local string, os = string, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -19,7 +20,13 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
 theme.icon_dir                                  = os.getenv("HOME") .. "/.config/awesome/themes/holo/icons"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
 theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/themes/holo/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Roboto Bold 12"
 theme.taglist_font                              = "Roboto Condensed Regular 12"
 
@@ -80,6 +87,10 @@ theme.calendar                                  = theme.icon_dir .. "/cal.png"
 theme.cpu                                       = theme.icon_dir .. "/cpu.png"
 theme.net_up                                    = theme.icon_dir .. "/net_up.png"
 theme.net_down                                  = theme.icon_dir .. "/net_down.png"
+
+-- ============================================================================
+-- LAYOUT IKONOK (VISSZAKAPCSOLVA A PNG-KHEZ)
+-- ============================================================================
 theme.layout_tile                               = theme.icon_dir .. "/tile.png"
 theme.layout_tileleft                           = theme.icon_dir .. "/tileleft.png"
 theme.layout_tilebottom                         = theme.icon_dir .. "/tilebottom.png"
@@ -92,6 +103,8 @@ theme.layout_max                                = theme.icon_dir .. "/max.png"
 theme.layout_fullscreen                         = theme.icon_dir .. "/fullscreen.png"
 theme.layout_magnifier                          = theme.icon_dir .. "/magnifier.png"
 theme.layout_floating                           = theme.icon_dir .. "/floating.png"
+-- ============================================================================
+
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.useless_gap                               = dpi(4)
@@ -123,7 +136,7 @@ local blue   = theme.nord8  -- Changed from #80CCE6 to nord8
 local space3 = markup.font("Roboto 3", " ")
 
 -- Clock
-local mytextclock = wibox.widget.textclock(markup(theme.nord4, space3 .. "%H:%M   " .. markup.font("Roboto 4", " ")))
+local mytextclock = wibox.widget.textclock(markup(theme.nord4, space3 .. "%H:%M    " .. markup.font("Roboto 4", " ")))
 mytextclock.font = theme.font
 local clock_icon = wibox.widget.imagebox(theme.clock)
 local clockbg = wibox.container.background(mytextclock, theme.bg_focus, gears.shape.rectangle)
@@ -268,26 +281,32 @@ local cpu = lain.widget.cpu({
 local cpubg = wibox.container.background(cpu.widget, theme.bg_focus, gears.shape.rectangle)
 local cpuwidget = wibox.container.margin(cpubg, dpi(0), dpi(0), dpi(5), dpi(5))
 
--- Net
+-- Net Widget (MODERN Mbps/Gbps - Holo stílus)
 local netdown_icon = wibox.widget.imagebox(theme.net_down)
 local netup_icon = wibox.widget.imagebox(theme.net_up)
 local net = lain.widget.net({
     settings = function()
-        widget:set_markup(markup.font("Roboto 1", " ") .. markup.font(theme.font, net_now.received .. " - "
-                          .. net_now.sent) .. markup.font("Roboto 2", " "))
+        -- Speedtest stílusú sebesség kijelzés
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            if speed_kbit >= 1000000 then 
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then 
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else 
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
+        widget:set_markup(markup.font("Roboto 1", " ") .. markup.font(theme.font, received .. " - "
+                          .. sent) .. markup.font("Roboto 2", " "))
     end
 })
 local netbg = wibox.container.background(net.widget, theme.bg_focus, gears.shape.rectangle)
 local networkwidget = wibox.container.margin(netbg, dpi(0), dpi(0), dpi(5), dpi(5))
-
--- Weather
---[[ to be set before use
-theme.weather = lain.widget.weather({
-    --APPID =
-    city_id = 2643743, -- placeholder (London)
-    notification_preset = { font = "Monospace 9", position = "bottom_right" },
-})
---]]
 
 -- Launcher
 local mylauncher = awful.widget.button({ image = theme.awesome_icon_launcher })
@@ -314,12 +333,16 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = awful.util.terminal })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    -- Csak akkor állítunk be háttérképet, ha a 'theme.wallpaper' 
+    -- NEM nil (az rc.lua vezérli).
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -344,7 +367,17 @@ function theme.at_screen_connect(s)
     -- Create a tasklist widget
     s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, { bg_focus = theme.bg_focus, shape = gears.shape.rectangle, shape_border_width = 5, shape_border_color = theme.tasklist_bg_normal, align = "center" })
 
-    -- Create the wibox
+    -- =====================================================================
+    -- WEATHER WIDGET (Holo Stílusú Csomagolás)
+    -- =====================================================================
+    -- Mivel az at_screen_connect-ben vagyunk, a beautiful.weather_widget
+    -- már biztosan létezik (az rc.lua hozta létre).
+    -- Becsomagoljuk, hogy ugyanúgy nézzen ki, mint a többi Holo widget.
+    local weatherbg = wibox.container.background(beautiful.weather_widget, theme.bg_focus, gears.shape.rectangle)
+    local weatherwidget = wibox.container.margin(weatherbg, dpi(0), dpi(0), dpi(5), dpi(5))
+    -- =====================================================================
+
+    -- Create the wibox (TOP BAR)
     s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(32) })
 
     -- Add widgets to the wibox
@@ -378,6 +411,14 @@ function theme.at_screen_connect(s)
             spr_very_small,
             volumewidget,
             spr_left,
+            -- WEATHER WIDGET FELSŐ SÁV (Itt van helye)
+            weatherwidget,
+            spr_very_small,
+            calendar_icon,
+            calendarwidget,
+            --
+            clock_icon,
+            clockwidget,
         },
     }
 
@@ -403,11 +444,6 @@ function theme.at_screen_connect(s)
             cpu_icon,
             cpuwidget,
             bottom_bar,
-            calendar_icon,
-            calendarwidget,
-            bottom_bar,
-            clock_icon,
-            clockwidget,
         },
     }
 end

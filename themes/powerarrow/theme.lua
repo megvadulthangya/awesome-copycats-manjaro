@@ -11,6 +11,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Fontos a weather widget eléréséhez
 
 local math, string, os = math, string, os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -223,12 +224,28 @@ local bat = lain.widget.bat({
     end
 })
 
--- Net
+-- Net (DINAMIKUS Mbps/Gbps)
 local neticon = wibox.widget.imagebox(theme.widget_net)
 local net = lain.widget.net({
     settings = function()
+        -- Segédfüggvény: BIT alapú sebesség (Speedtest stílus)
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            
+            if speed_kbit >= 1000000 then -- Gigabit
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Megabit
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Kilobit
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
         widget:set_markup(markup.fontfg(theme.font, "#D8DEE9", 
-            " " .. net_now.received .. "↓ " .. net_now.sent .. "↑ "))
+            " " .. received .. "↓ " .. sent .. "↑ "))
     end
 })
 
@@ -251,12 +268,12 @@ function theme.powerline_rl(cr, width, height)
         offset = -arrow_depth
     end
 
-    cr:move_to(offset + arrow_depth         , 0        )
-    cr:line_to(offset + width               , 0        )
+    cr:move_to(offset + arrow_depth          , 0         )
+    cr:line_to(offset + width                , 0         )
     cr:line_to(offset + width - arrow_depth , height/2 )
-    cr:line_to(offset + width               , height   )
-    cr:line_to(offset + arrow_depth         , height   )
-    cr:line_to(offset                       , height/2 )
+    cr:line_to(offset + width                , height    )
+    cr:line_to(offset + arrow_depth          , height    )
+    cr:line_to(offset                        , height/2 )
 
     cr:close_path()
 end
@@ -360,6 +377,13 @@ function theme.at_screen_connect(s)
                 wibox.widget { neticon, net.widget, layout = wibox.layout.align.horizontal }, 
                 dpi(3), dpi(3)), "#2E3440"),
             
+            -- IDŐJÁRÁS WIDGET (Itt a helye!)
+            -- Mivel a Net widget és a Brightness is #2E3440 színű, ide simán beszúrhatjuk
+            arrow("#2E3440", "#2E3440"), -- Ez gyakorlatilag láthatatlan, de fenntartja a struktúrát
+            wibox.container.background(wibox.container.margin(
+                beautiful.weather_widget, -- Az rc.lua-ból jön
+                dpi(3), dpi(3)), "#2E3440"),
+
             -- Brightness - sötét
             arrow("#2E3440", "#2E3440"),  -- nord0
             wibox.container.background(wibox.container.margin(

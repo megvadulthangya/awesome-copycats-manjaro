@@ -1,9 +1,7 @@
 --[[
-
      Nord Awesome WM theme
      last modified by: github.com/megvadulthangya
-     Alapul véve a Rainbow témán és a Nord palettán
-
+     Based on Rainbow theme by github.com/lcpz
 --]]
 
 local gears = require("gears")
@@ -11,6 +9,7 @@ local lain  = require("lain")
 local awful = require("awful")
 local wibox = require("wibox")
 local dpi   = require("beautiful.xresources").apply_dpi
+local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
@@ -18,7 +17,13 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/rainbow"
+
+-- ============================================================================
+-- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
+-- ============================================================================
 theme.wallpaper                                 = theme.dir .. "/wall.png"
+-- ============================================================================
+
 theme.font                                      = "Terminus 12"
 
 -- Nord color palette
@@ -40,9 +45,9 @@ theme.nord14 = "#A3BE8C"  -- green
 theme.nord15 = "#B48EAD"  -- purple
 
 -- Theme colors
-theme.fg_normal                                 = theme.nord3  -- Változtatva: nord4-ről nord3-ra (sötétebb szürke inaktív ablakoknak)
-theme.fg_focus                                  = theme.nord6  -- Aktív ablak szövege fehér marad
-theme.fg_minimize                               = theme.nord3  -- Minimalizált ablakok szövege is sötétebb szürke
+theme.fg_normal                                 = theme.nord3
+theme.fg_focus                                  = theme.nord6
+theme.fg_minimize                               = theme.nord3
 theme.bg_normal                                 = theme.nord0
 theme.bg_focus                                  = theme.nord1
 theme.fg_urgent                                 = theme.nord0
@@ -52,19 +57,16 @@ theme.border_normal                             = theme.nord0
 theme.border_focus                              = theme.nord8
 theme.taglist_fg_focus                          = theme.nord8
 theme.taglist_bg_focus                          = theme.nord1
-theme.taglist_fg_occupied                       = theme.nord4  -- Foglalt tag-ek világosabb szürkével
-theme.taglist_fg_empty                          = theme.nord3  -- Üres tag-ek sötétebb szürkével
-theme.taglist_fg_urgent                         = theme.nord11 -- Sürgős tag-ek pirossal
+theme.taglist_fg_occupied                       = theme.nord4
+theme.taglist_fg_empty                          = theme.nord3
+theme.taglist_fg_urgent                         = theme.nord11
 
--- Tasklist colors - itt tudod beállítani a taskbaron lévő ablakok szövegszínét
-theme.tasklist_fg_normal                        = theme.nord3   -- Inaktív ablakok szövege a taskbaren
-theme.tasklist_fg_focus                         = theme.nord6   -- Aktív ablak szövege a taskbaren
-theme.tasklist_fg_urgent                        = theme.nord11  -- Sürgős ablakok szövege
+-- Tasklist colors
+theme.tasklist_fg_normal                        = theme.nord3
+theme.tasklist_fg_focus                         = theme.nord6
+theme.tasklist_fg_urgent                        = theme.nord11
 theme.tasklist_bg_normal                        = theme.nord0
 theme.tasklist_bg_focus                         = theme.nord1
-
-
-
 
 theme.menu_height                               = dpi(20)
 theme.menu_width                                = dpi(250)
@@ -139,8 +141,8 @@ mytextclock.font = theme.font
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock },
     notification_preset = {
-        font = "Terminus 11",
-        fg   = white,
+        font = "Terminus 10",
+        fg   = theme.nord4,
         bg   = theme.nord0
     }
 })
@@ -202,12 +204,39 @@ theme.volume.bar:buttons(my_table.join (
 local volumebg = wibox.container.background(theme.volume.bar, theme.nord1, gears.shape.rectangle)
 local volumewidget = wibox.container.margin(volumebg, dpi(7), dpi(7), dpi(5), dpi(5))
 
+-- Net Widget (Speedtest stílus: Mbps/Gbps - SZOLIDABB SZÍNEKKEL)
+local net = lain.widget.net({
+    settings = function()
+        -- Segédfüggvény: BIT alapú sebesség
+        local function format_speed_bits(speed_kb_per_sec)
+            local speed_kbit = (tonumber(speed_kb_per_sec) or 0) * 8
+            
+            if speed_kbit >= 1000000 then -- Gigabit
+                return string.format("%.1f Gbps", speed_kbit / 1000000)
+            elseif speed_kbit >= 1000 then -- Megabit
+                return string.format("%.1f Mbps", speed_kbit / 1000)
+            else -- Kilobit
+                return string.format("%.0f Kbps", speed_kbit)
+            end
+        end
+
+        local received = format_speed_bits(net_now.received)
+        local sent     = format_speed_bits(net_now.sent)
+
+        -- Rainbow stílus: színes nyilak és szöveg
+        -- Nord14 (zöld) a letöltés, Nord9 (kék) a feltöltés
+        widget:set_markup(markup.font(theme.font, 
+            markup(theme.nord14, " ↓" .. received) .. 
+            markup(theme.nord9,  " ↑" .. sent) .. " "
+        ))
+    end
+})
+
 -- Separators
 local first = wibox.widget.textbox(markup.font("Terminus 4", " "))
 local spr   = wibox.widget.textbox(' ')
 
 local function update_txt_layoutbox(s)
-    -- Writes a string representation of the current layout in a textbox widget
     local txt_l = theme["layout_txt_" .. awful.layout.getname(awful.layout.get(s))] or ""
     s.mytxtlayoutbox:set_text(txt_l)
 end
@@ -216,12 +245,25 @@ function theme.at_screen_connect(s)
     -- Quake application
     s.quake = lain.util.quake({ app = "alacritty" })
 
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
+    -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
+    -- Figyeli az rc.lua beautiful.wallpaper változóját
+    local wallpaper = beautiful.wallpaper 
+    if wallpaper then
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, true)
     end
-    gears.wallpaper.maximized(wallpaper, s, true)
+
+    -- ====================================================================
+    -- MINDEN MARGÓ ÉS HÉZAG NULLÁZÁSA (SZELLEM SÁV ELLEN)
+    -- ====================================================================
+    -- Ez explicit megmondja, hogy semmi se foglaljon helyet a széleken.
+    -- Késleltetve futtatjuk, hogy biztosan felülírja a beragadt beállításokat.
+    gears.timer.delayed_call(function()
+        s.padding = { left = 0, right = 0, top = 0, bottom = 0 }
+    end)
+    -- ====================================================================
 
     -- Tags
     awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
@@ -273,30 +315,14 @@ function theme.at_screen_connect(s)
             wibox.widget.systray(),
             spr,
             theme.mpd.widget,
+            net.widget, -- Hálózat (Új - szolidabb színekkel)
             volumewidget,
+            beautiful.weather_widget, -- Időjárás (Új)
             mytextclock,
         },
     }
     
-    -- Create a bottom wibox for additional widgets
-    s.mybottomwibox = awful.wibar({
-        position = "bottom",
-        screen = s,
-        height = dpi(18),
-        bg = theme.nord0,
-        fg = theme.nord4
-    })
-    
-    s.mybottomwibox:setup {
-        layout = wibox.layout.align.horizontal,
-        { -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-        },
-        nil, -- Middle widget (empty)
-        { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-        },
-    }
+    -- ALSÓ SÁV TÖRÖLVE!
 end
 
 return theme
