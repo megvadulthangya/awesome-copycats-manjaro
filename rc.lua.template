@@ -58,7 +58,7 @@ local themes = {
     "vertex"           -- 10
 }
 
-local chosen_theme = themes[10] -- Jelenleg: powerarrow-dark
+local chosen_theme = themes[7] -- Jelenleg: powerarrow-dark
 
 -- Globális változók (_G) - ezeket látják a modulok is
 _G.modkey       = "Mod4"
