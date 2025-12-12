@@ -84,5 +84,5 @@ awful.spawn.with_shell(
 --awful.spawn.with_shell("feh --randomize --bg-fill ~/.wallpapers/*")
 --awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/bac-- {{{ Key bindingskgrounds/*")
 --awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/wallpapers/*")
---awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/nordic-backgrounds*")
-awful.spawn.with_shell("feh --bg-fill /usr/share/backgrounds/nordic-backgrounds/ign_manjaro.jpg")
+awful.spawn.with_shell("feh --randomize --bg-fill /usr/share/backgrounds/nordic-backgrounds*")
+--awful.spawn.with_shell("feh --bg-fill /usr/share/backgrounds/nordic-backgrounds/ign_manjaro.jpg")
