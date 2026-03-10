@@ -158,6 +158,13 @@ awful.rules.rules = rules.create(keys.clientkeys, keys.clientbuttons)
 require("signals.init")
 -- }}}
 
+-- {{{ Session management
+local session = require("modules.session-manager")
+awesome.connect_signal("exit", function() session.save() end)
+awesome.connect_signal("restart", function() session.save() end)
+session.load()
+-- }}}
+
 -- {{{ Autostart (INDÍTÁSI PARANCSOK)
 -- EZT TESSZÜK A LEGVÉGÉRE!
 -- Ez tartalmazza a 'feh' parancsot. Mivel ez fut le utoljára,
