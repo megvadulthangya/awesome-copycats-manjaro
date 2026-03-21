@@ -76,7 +76,7 @@ function session.save()
             naughty.notify {
                 title   = "Session Manager",
                 text    = "Skipped client: no class or tag\n" ..
-                         (c.name or "unknown"),
+                          (c.name or "unknown"),
                 timeout = 3
             }
         end
@@ -123,9 +123,22 @@ function session.load()
                     local target_tag = target_screen.tags[entry.tag]
                     if target_tag then
                         c:move_to_tag(target_tag)
-                        -- Restore the tag’s layout (if it differs, set it)
+                        
+                        -- Restore the tag’s layout safely
                         if target_tag.layout.name ~= entry.layout then
-                            awful.layout.set(entry.layout, target_tag)
+                            -- Meg kell keresni a stringhez tartozó layout objektumot
+                            local actual_layout = nil
+                            for _, l in ipairs(awful.layout.layouts) do
+                                if l.name == entry.layout then
+                                    actual_layout = l
+                                    break
+                                end
+                            end
+                            
+                            -- Ha megtaláltuk az objektumot, beállítjuk
+                            if actual_layout then
+                                awful.layout.set(actual_layout, target_tag)
+                            end
                         end
                         target_tag:view_only()
                     end
