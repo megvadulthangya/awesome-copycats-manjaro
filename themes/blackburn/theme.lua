@@ -17,7 +17,7 @@ local os = os
 local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
-theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/blackburn"
+theme.dir                                       = "/usr/share/awesome/themes/blackburn"
 
 -- ============================================================================
 -- HÁTTÉRKÉP BEÁLLÍTÁS

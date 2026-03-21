@@ -16,7 +16,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
-theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/rainbow"
+theme.dir                                       = "/usr/share/awesome/themes/rainbow"
 
 -- ============================================================================
 -- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)

@@ -35,7 +35,7 @@ theme.nord13 = "#EBCB8B"  -- yellow
 theme.nord14 = "#A3BE8C"  -- green
 theme.nord15 = "#B48EAD"  -- purple
 
-theme.confdir = os.getenv("HOME") .. "/.config/awesome/themes/multicolor"
+theme.confdir = "/usr/share/awesome/themes/multicolor"
 
 -- ============================================================================
 -- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)

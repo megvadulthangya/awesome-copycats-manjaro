@@ -90,7 +90,7 @@ awful.util.tasklist_buttons = tags_config.tasklist_buttons
 -- TÉMA BETÖLTÉSE
 -- ===================================================================
 -- Most már biztonságos betölteni, mert a fenti változók léteznek.
-beautiful.init(string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme))
+beautiful.init(string.format("/usr/share/awesome/themes/%s/theme.lua", chosen_theme))
 beautiful.wallpaper = nil
 
 -- Időjárás widget csatlakoztatása a témához

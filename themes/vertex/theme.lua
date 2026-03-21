@@ -19,12 +19,12 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
-theme.icon_dir                                  = os.getenv("HOME") .. "/.config/awesome/themes/vertex/icons"
+theme.icon_dir                                  = "/usr/share/awesome/themes/vertex/icons"
 
 -- ============================================================================
 -- ALAPÉRTELMEZETT HÁTTÉRKÉP (VISSZAKAPCSOLVA)
 -- ============================================================================
-theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/themes/vertex/wall.png"
+theme.wallpaper                                 = "/usr/share/awesome/themes/vertex/wall.png"
 -- ============================================================================
 
 theme.font                                      = "Roboto Bold 12"
