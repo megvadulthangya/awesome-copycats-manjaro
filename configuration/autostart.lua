@@ -16,7 +16,42 @@ run_once({
 -- Starts the 'xss-lock' daemon. It first sets the display power management idle time (xset s).
 -- The 'safe-lock.sh' script is executed when the system locks, and the xss-lock setup
 -- will prevent locking while media (MPV, Grayjay, browser) is playing.
-    "xset s 300 300; xss-lock -- /usr/local/bin/safe-lock.sh", -- Idle time hardcoded from logic
+
+-- ===============================================================================
+-- SCREEN LOCK & DISPLAY POWER MANAGEMENT (DPMS) CONFIGURATION
+-- ===============================================================================
+-- How to use this section:
+-- In Lua, two dashes ("--") mean the line is a comment and will be IGNORED.
+-- To make a setting active, REMOVE the "--" from the beginning of that line.
+-- Make sure ONLY ONE of the configuration lines below is active (uncommented).
+--
+-- How the timers work (values are in SECONDS):
+-- 1. 'xset s' controls the lock timer (when xss-lock triggers safe-lock.sh).
+-- 2. 'xset dpms' controls the monitor power-off timer (standby, suspend, off).
+-- 
+-- IMPORTANT: If you want the monitor to stay ON after locking, the 'dpms' 
+-- values MUST be higher than the 'xset s' values.
+--
+-- Time conversions: 
+-- 300s = 5 mins | 900s = 15 mins | 3000s = 50 mins | 3600s = 60 mins
+-- ===============================================================================
+
+-- OPTION 1: Short timers (Everyday use)
+-- Locks after 5 minutes (300s), turns off monitor after 15 minutes (900s).
+-- "xset s 300 300; xset dpms 900 900 900; xss-lock -- /usr/local/bin/safe-lock.sh",
+
+-- OPTION 2: Long timers (Extended use)
+-- Locks after 50 minutes (3000s), turns off monitor after 60 minutes (3600s).
+-- "xset s 3000 3000; xset dpms 3600 3600 3600; xss-lock -- /usr/local/bin/safe-lock.sh",
+
+-- OPTION 3: Lock only, never turn off monitor (DPMS disabled)
+-- Locks after 10 minutes (600s), but prevents the screen from turning off automatically.
+-- "xset s 600 600; xset -dpms; xss-lock -- /usr/local/bin/safe-lock.sh",
+
+-- >>> ACTIVE SETTING:
+-- (Leave only your preferred option uncommented below)
+"xset s 300 300; xset dpms 900 900 900; xss-lock -- /usr/local/bin/safe-lock.sh",
+
 -- Ensures GTK appearance settings (icons/themes for Thunar, mouse cursor, fonts) 
 -- are applied in the AwesomeWM session. It only starts the daemon if it's not already running.
 --        "xfsettingsd",
