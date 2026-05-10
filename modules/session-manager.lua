@@ -98,8 +98,13 @@ function session.load()
 
     session_data = data
 
-    -- Spawn all saved applications with a 5-second delay (sleep in shell)
-    local delay = 10   -- you can adjust this value (in seconds)
+    -- ============================================================
+    -- IDŐZÍTETT VISSZAÁLLÍTÁS:
+    -- A 'sleep 10 &&' paranccsal 10 másodperc késleltetést adunk,
+    -- így az ablakok nem azonnal, hanem egy kis szünet után jelennek meg.
+    -- A 'delay' változóval tetszőleges késleltetés beállítható.
+    -- ============================================================
+    local delay = 10   -- másodperc; állítsd át, ha más értékre van szükséged
     for _, entry in ipairs(session_data) do
         local cmd = entry.cmd or entry.class
         awful.spawn.with_shell("sleep " .. delay .. " && " .. cmd)

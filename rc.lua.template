@@ -1,5 +1,6 @@
 --[[
       Awesome WM configuration (Modularized & Fixed)
+	You can find all of the modules, in /etc/xdg/awesome
 --]]
 
 -- {{{ Required libraries
