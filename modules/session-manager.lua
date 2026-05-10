@@ -98,14 +98,11 @@ function session.load()
 
     session_data = data
 
-    -- Spawn all saved applications using the stored cmd field
+    -- Spawn all saved applications with a 5-second delay (sleep in shell)
+    local delay = 10   -- you can adjust this value (in seconds)
     for _, entry in ipairs(session_data) do
-        if entry.cmd then
-            awful.spawn(entry.cmd)
-        else
-            -- Fallback (should never happen with new saves)
-            awful.spawn(entry.class)
-        end
+        local cmd = entry.cmd or entry.class
+        awful.spawn.with_shell("sleep " .. delay .. " && " .. cmd)
     end
 
     -- Connect a one‑time signal handler to place clients as they appear

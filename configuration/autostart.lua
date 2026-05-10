@@ -42,7 +42,7 @@ run_once({
 
 -- OPTION 2: Long timers (Extended use)
 -- Locks after 50 minutes (3000s), turns off monitor after 60 minutes (3600s).
--- "xset s 3000 3000; xset dpms 3600 3600 3600; xss-lock -- /usr/local/bin/safe-lock.sh",
+--"xset s 3000 3000; xset dpms 3600 3600 3600; xss-lock -- /usr/local/bin/safe-lock.sh",
 
 -- OPTION 3: Lock only, never turn off monitor (DPMS disabled)
 -- Locks after 10 minutes (600s), but prevents the screen from turning off automatically.
@@ -98,11 +98,13 @@ run_once({
 -- Starts the KDE Connect system tray indicator, providing a visual way to manage the connection and access its features
 --    "kdeconnect-indicator",
 -- Starts the Gsconnect-backround service.
-    "gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js"
+    "gjs -m /usr/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js",
 -- Starts Manjaro Hello
 --    "/usr/bin/manjaro-hello",
 -- Start install script
 --    "/bin/bash/ -c `sleep 10 && $HOME/awesome-setup-wrapper.sh`"
+--gghelper repo monitoring process
+    "gghelper --watch"
  }) -- comma-separated entries
 
 -- This function implements the XDG autostart specification
