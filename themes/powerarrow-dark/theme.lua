@@ -202,15 +202,15 @@ theme.volume = lain.widget.alsa({
     settings = function()
         if volume_now.status == "off" then
             volicon:set_image(theme.widget_vol_mute)
-        elseif tonumber(volume_now.level) == 0 then
+        elseif volume_now.level and tonumber(volume_now.level) == 0 then
             volicon:set_image(theme.widget_vol_no)
-        elseif tonumber(volume_now.level) <= 50 then
+        elseif volume_now.level and tonumber(volume_now.level) <= 50 then
             volicon:set_image(theme.widget_vol_low)
         else
             volicon:set_image(theme.widget_vol)
         end
 
-        widget:set_markup(markup.font(theme.font, " " .. volume_now.level .. "% "))
+        widget:set_markup(markup.font(theme.font, " " .. (volume_now.level or "?") .. "% "))
     end
 })
 theme.volume.widget:buttons(awful.util.table.join(
