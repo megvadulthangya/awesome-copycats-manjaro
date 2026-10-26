@@ -161,7 +161,13 @@ require("signals.init")
 
 -- {{{ Session management
 local session = require("modules.session-manager")
-awesome.connect_signal("exit", function() session.save() end)
+-- NOTE: Only "restart" signal saves the session.
+-- The "exit" signal is intentionally NOT connected, because on logout/reboot
+-- apps receive SIGTERM BEFORE Awesome's exit signal fires, and an exit-time
+-- save would capture a "dying" state (apps already gone).
+-- The session-manager instead runs a periodic save every 15s, so the on-disk
+-- state is always fresh. The skip_save guard in session.save() prevents the
+-- periodic save from also firing during the logout window.
 awesome.connect_signal("restart", function() session.save() end)
 session.load()
 -- }}}

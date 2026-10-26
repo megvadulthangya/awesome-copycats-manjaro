@@ -42,7 +42,7 @@ run_once({
 
 -- OPTION 2: Long timers (Extended use)
 -- Locks after 50 minutes (3000s), turns off monitor after 60 minutes (3600s).
---"xset s 3000 3000; xset dpms 3600 3600 3600; xss-lock -- /usr/local/bin/safe-lock.sh",
+"xset s 3000 3000; xset dpms 3600 3600 3600; xss-lock -- /usr/local/bin/safe-lock.sh",
 
 -- OPTION 3: Lock only, never turn off monitor (DPMS disabled)
 -- Locks after 10 minutes (600s), but prevents the screen from turning off automatically.
@@ -50,7 +50,7 @@ run_once({
 
 -- >>> ACTIVE SETTING:
 -- (Leave only your preferred option uncommented below)
-"xset s 300 300; xset dpms 900 900 900; xss-lock -- /usr/local/bin/safe-lock.sh",
+--"xset s 300 300; xset dpms 900 900 900; xss-lock -- /usr/local/bin/safe-lock.sh",
 
 -- Ensures GTK appearance settings (icons/themes for Thunar, mouse cursor, fonts) 
 -- are applied in the AwesomeWM session. It only starts the daemon if it's not already running.
