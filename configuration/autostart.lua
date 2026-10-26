@@ -107,6 +107,7 @@ run_once({
     "gghelper --watch",
 -- Clipboard manager (autostart to keep history running in background)
     "copyq --start-server",
+    "dunst",
  }) -- comma-separated entries
 
 -- This function implements the XDG autostart specification

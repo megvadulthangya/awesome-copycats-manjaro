@@ -23,6 +23,9 @@ keys.globalkeys = mytable.join(
     -- Destroy all notifications
     awful.key({ "Control",             }, "space", function() naughty.destroy_all_notifications() end,
               {description = "destroy all notifications", group = "hotkeys"}),
+    -- Dunst notification history (show previous notification)
+    awful.key({ _G.modkey }, "z", function () awful.spawn("dunstctl history-pop") end,
+              {description = "show previous notification", group = "hotkeys"}),
     -- Take a screenshot
     awful.key({}, "Print", function () awful.util.spawn("flameshot gui") end,
               {description = "Take Screenshot", group = "hotkeys"}),

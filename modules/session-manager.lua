@@ -207,7 +207,7 @@ function session.load()
         end
     end
 
-    local delay = 0
+    local delay = 10
     local spawned = {}
 
     for _, entry in ipairs(session_data) do
