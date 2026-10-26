@@ -104,7 +104,9 @@ run_once({
 -- Start install script
 --    "/bin/bash/ -c `sleep 10 && $HOME/awesome-setup-wrapper.sh`"
 --gghelper repo monitoring process
-    "gghelper --watch"
+    "gghelper --watch",
+-- Clipboard manager (autostart to keep history running in background)
+    "copyq --start-server",
  }) -- comma-separated entries
 
 -- This function implements the XDG autostart specification

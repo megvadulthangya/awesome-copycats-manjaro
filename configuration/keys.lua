@@ -309,6 +309,10 @@ keys.globalkeys = mytable.join(
     awful.key({ _G.modkey }, "v", function () awful.spawn.with_shell("xsel -b | xsel") end,
               {description = "copy gtk to terminal", group = "hotkeys"}),
 
+    -- Clipboard manager (CopyQ)
+    awful.key({ _G.modkey, "Shift" }, "v", function () awful.spawn("copyq toggle") end,
+              {description = "toggle clipboard manager", group = "launcher"}),
+
     -- User programs
     awful.key({ _G.modkey }, "q", function () awful.spawn(_G.browser) end,
               {description = "run browser", group = "launcher"}),
