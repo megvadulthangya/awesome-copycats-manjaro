@@ -8,6 +8,18 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local scratch = require("modules.scratch") -- Itt már az új helyről tölti be!
 local mytable = awful.util.table or gears.table
 
+-- Helper for volume actions with dunst OSD + optional wibar widget refresh.
+-- The script handles the actual volume change and the OSD notification;
+-- the callback here updates the wibar widget (beautiful.volume) AFTER the
+-- script has finished, so the widget shows the new value.
+local function volume_action(action)
+    awful.spawn.easy_async("/usr/local/bin/volume-osd.sh " .. action, function ()
+        if beautiful.volume and beautiful.volume.update then
+            beautiful.volume.update()
+        end
+    end)
+end
+
 local keys = {}
 
 -- {{{ Mouse bindings
@@ -199,54 +211,39 @@ keys.globalkeys = mytable.join(
     awful.key({ _G.altkey, }, "w", function () if beautiful.weather then beautiful.weather.show(7) end end,
               {description = "show weather", group = "widgets"}),
 
-    -- Screen brightness
-    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
-              {description = "+10%", group = "hotkeys"}),
-    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
-              {description = "-10%", group = "hotkeys"}),
+    -- Screen brightness (with dunst OSD)
+    awful.key({ }, "XF86MonBrightnessUp", function () awful.spawn("/usr/local/bin/brightness-osd.sh up") end,
+              {description = "+10% brightness", group = "hotkeys"}),
+    awful.key({ }, "XF86MonBrightnessDown", function () awful.spawn("/usr/local/bin/brightness-osd.sh down") end,
+              {description = "-10% brightness", group = "hotkeys"}),
 
-    -- Hangerő szabályozás
+    -- Hangerő szabályozás (with dunst OSD)
     awful.key({}, "XF86AudioRaiseVolume",
-        function () awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ +5%") end,
+        function () volume_action("up") end,
         {description = "volume up", group = "media"}),
 
     awful.key({}, "XF86AudioLowerVolume",
-        function () awful.spawn.with_shell("pactl set-sink-volume @DEFAULT_SINK@ -5%") end,
+        function () volume_action("down") end,
         {description = "volume down", group = "media"}),
 
     awful.key({}, "XF86AudioMute",
-        function () awful.spawn.with_shell("pactl set-sink-mute @DEFAULT_SINK@ toggle") end,
+        function () volume_action("mute") end,
         {description = "mute", group = "media"}),
-    -- ALSA volume control
+    -- ALSA-equivalent volume control (same backend, same OSD, keeps existing shortcuts)
     awful.key({ _G.altkey }, "Up",
-        function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
-            beautiful.volume.update()
-        end,
+        function () volume_action("up") end,
         {description = "volume up", group = "hotkeys"}),
     awful.key({ _G.altkey }, "Down",
-        function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
-            beautiful.volume.update()
-        end,
+        function () volume_action("down") end,
         {description = "volume down", group = "hotkeys"}),
     awful.key({ _G.altkey }, "m",
-        function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
-            beautiful.volume.update()
-        end,
+        function () volume_action("mute") end,
         {description = "toggle mute", group = "hotkeys"}),
     awful.key({ _G.altkey, "Control" }, "m",
-        function ()
-            os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
-            beautiful.volume.update()
-        end,
+        function () volume_action("100") end,
         {description = "volume 100%", group = "hotkeys"}),
     awful.key({ _G.altkey, "Control" }, "0",
-        function ()
-            os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
-            beautiful.volume.update()
-        end,
+        function () volume_action("0") end,
         {description = "volume 0%", group = "hotkeys"}),
 
     -- Media keys
