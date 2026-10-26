@@ -12,7 +12,7 @@ local session_data = nil
 -- Add entries here for any application that doesn't start correctly.
 local command_map = {
     ["Com.gexperts.Tilix"] = "tilix",
-    ["Brave-browser"]      = "brave",
+    ["brave-browser"]      = "brave-browser --restore-last-session",  -- Brave WM_CLASS is lowercase
     ["Geany"]              = "geany",
     ["XnViewMP"]           = "xnviewmp",
     -- Example for Grayjay (once you know its WM_CLASS):

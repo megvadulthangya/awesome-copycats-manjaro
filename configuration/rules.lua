@@ -99,7 +99,16 @@ rules.create = function(clientkeys, clientbuttons)
               })
           end)
       end
-        } 
+        },
+
+        -- ==========================================================
+        -- 3. JAVÍTÁS: BRAVE BROWSER (opcionális, a session restore-hoz)
+        -- ==========================================================
+        -- Ha a Brave ablakok néha rossz tag-re kerülnek, itt kényszerítheted
+        -- őket egy adott tag-re. A session-manager ettől függetlenül
+        -- a mentett tag-re próbálja visszatenni őket.
+        -- { rule = { class = "brave-browser" },
+        --   properties = { tag = "1" } },   -- Példa: mindig az 1-es tag-re
     }
 end
 
