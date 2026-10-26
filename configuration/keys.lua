@@ -6,7 +6,7 @@ local beautiful = require("beautiful")
 local lain = require("lain")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local scratch = require("modules.scratch") -- Itt már az új helyről tölti be!
-local mytable = awful.util.table or gears.table
+local mytable = gears.table
 
 -- Helper for volume actions with dunst OSD + optional wibar widget refresh.
 -- The script handles the actual volume change and the OSD notification;
@@ -24,7 +24,7 @@ local keys = {}
 
 -- {{{ Mouse bindings
 keys.rootbuttons = mytable.join(
-    awful.button({ }, 3, function () awful.util.mymainmenu:toggle() end),
+    awful.button({ }, 3, function () _G.mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 )
@@ -39,7 +39,7 @@ keys.globalkeys = mytable.join(
     awful.key({ _G.modkey }, "z", function () awful.spawn("dunstctl history-pop") end,
               {description = "show previous notification", group = "hotkeys"}),
     -- Take a screenshot
-    awful.key({}, "Print", function () awful.util.spawn("flameshot gui") end,
+    awful.key({}, "Print", function () awful.spawn("flameshot gui") end,
               {description = "Take Screenshot", group = "hotkeys"}),
 
     -- i3lock-fancy screen locker
@@ -105,7 +105,7 @@ keys.globalkeys = mytable.join(
         {description = "focus right", group = "client"}),
 
     -- Menu
-    awful.key({ _G.modkey,              }, "w", function () awful.util.mymainmenu:show() end,
+    awful.key({ _G.modkey,              }, "w", function () _G.mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
 
     -- Layout manipulation

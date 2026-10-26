@@ -2,7 +2,7 @@
 local awful = require("awful")
 local gears = require("gears")
 local lain  = require("lain")
-local mytable = awful.util.table or gears.table
+local mytable = gears.table
 
 local tags = {}
 
