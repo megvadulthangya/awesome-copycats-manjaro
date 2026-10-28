@@ -76,18 +76,38 @@ local chosen_theme = themes[7] -- 7 is powerarrow-dark
 
 ## 🎨 Theme Gallery
 
-*(Screenshots coming soon in the ISO presentation)*
+**Multicolor**, inspired by lucamanni
+![Multicolor](screenshots/multicolor.png)
 
-*   **Powerarrow / Powerarrow Dark** (Based on romockee)
-*   **Blackburn**
-*   **Dremora**
-*   **Rainbow**
-*   **Multicolor** (Inspired by lucamanni)
-*   **Steamburn** (Based on ok100)
-*   **Holo**
-*   **Copland**
-*   **Vertex**
+**Powerarrow**, porting of romockee's
+![Powerarrow](screenshots/powerarrow.png)
+
+**Powerarrow Dark**
+![Powerarrow Dark](screenshots/powerarrow_dark.png)
+
+**Steamburn**, porting of ok100's dwm
+![Steamburn](screenshots/steamburn.png)
+
+**Blackburn**
+![Blackburn](screenshots/blackburn.png)
+
+**Dremora**
+![Dremora](screenshots/dremora.png)
+
+**Rainbow**
+![Rainbow](screenshots/rainbow.png)
+
+**Holo**, requested by amouly
+![Holo](screenshots/holo.png)
+
+**Copland**, inspired by foozer
+![Copland](screenshots/copland.png)
+
+**Vertex**, requested by swordfischer
+![Vertex](screenshots/vertex.png)
 
 ---
 *Based on the original work by Luca CPZ, Veratil, and the AwesomeWM community. Maintained for the Manjaro Respin by megvadulthangya.*
 ```
+
+**Repo: `awesome-copycats-manjaro`**
