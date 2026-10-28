@@ -1,7 +1,5 @@
 -- configuration/autostart.lua
 local awful = require("awful")
-local filesystem = require("gears.filesystem")
-local config_dir = filesystem.get_configuration_dir()
 
 -- {{{ Autostart windowless processes
 -- This function will run once every time Awesome is started
