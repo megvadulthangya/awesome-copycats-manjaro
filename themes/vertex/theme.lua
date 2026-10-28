@@ -15,10 +15,10 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local math, string, tag, tonumber, type, os = math, string, tag, tonumber, type, os
-local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local my_table = gears.table
 
 local theme                                     = {}
-theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
+theme.default_dir                               = gears.filesystem.get_themes_dir() .. "default"
 theme.icon_dir                                  = "/usr/share/awesome/themes/vertex/icons"
 
 -- ============================================================================
@@ -94,6 +94,7 @@ theme.layout_cornerse                           = theme.default_dir.."/layouts/c
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.useless_gap                               = dpi(10)
+theme.separators_height                         = dpi(18)
 theme.titlebar_close_button_normal              = theme.default_dir.."/titlebar/close_normal.png"
 theme.titlebar_close_button_focus               = theme.default_dir.."/titlebar/close_focus.png"
 theme.titlebar_minimize_button_normal           = theme.default_dir.."/titlebar/minimize_normal.png"
@@ -116,7 +117,7 @@ theme.titlebar_maximized_button_normal_active   = theme.default_dir.."/titlebar/
 theme.titlebar_maximized_button_focus_active    = theme.default_dir.."/titlebar/maximized_focus_active.png"
 
 -- http://fontawesome.io/cheatsheet
-awful.util.tagnames = { "", "", "", "", "", "", "", "" }
+_G.tagnames = { "", "", "", "", "", "", "" }
 
 local markup = lain.util.markup
 
@@ -225,7 +226,7 @@ theme.volume = lain.widget.alsabar({
 })
 volicon:buttons(my_table.join (
           awful.button({}, 1, function()
-            awful.spawn(string.format("%s -e alsamixer", awful.util.terminal))
+            awful.spawn(string.format("%s -e alsamixer", _G.terminal))
           end),
           awful.button({}, 2, function()
             os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
@@ -259,7 +260,7 @@ wifitooltip:set_shape(function(cr, width, height)
     gears.shape.infobubble(cr, width, height, corner_radius, arrow_size, width - dpi(120))
 end)
 local mywifisig = awful.widget.watch(
-    { awful.util.shell, "-c", "awk 'NR==3 {printf(\"%d-%.0f\\n\",$2, $3*10/7)}' /proc/net/wireless; iw dev wlan0 link" },
+    { os.getenv("SHELL") or "sh", "-c", "awk 'NR==3 {printf(\"%d-%.0f\\n\",$2, $3*10/7)}' /proc/net/wireless; iw dev wlan0 link" },
     2,
     function(widget, stdout)
         local carrier, perc = stdout:match("(%d)-(%d+)")
@@ -285,14 +286,14 @@ local mywifisig = awful.widget.watch(
         end
     end
 )
-wificon:connect_signal("button::press", function() awful.spawn(string.format("%s -e wavemon", awful.util.terminal)) end)
+wificon:connect_signal("button::press", function() awful.spawn(string.format("%s -e wavemon", _G.terminal)) end)
 
 -- Weather (ikon)
 local weathericon = wibox.widget.imagebox(theme.widget_weather) -- Használjuk a témában lévő ikonokat ha vannak
 
 -- Launcher
 local mylauncher = awful.widget.button({image = theme.awesome_icon})
-mylauncher:connect_signal("button::press", function() awful.util.mymainmenu:toggle() end)
+mylauncher:connect_signal("button::press", function() _G.mymainmenu:toggle() end)
 
 -- Separators
 local space = wibox.widget.textbox(" ")
@@ -406,7 +407,7 @@ end
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal, border = theme.border_width })
+    s.quake = lain.util.quake({ app = _G.terminal, border = theme.border_width })
 
     -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
     local wallpaper = beautiful.wallpaper 
@@ -418,7 +419,7 @@ function theme.at_screen_connect(s)
     end
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+    awful.tag(_G.tagnames, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -436,7 +437,7 @@ function theme.at_screen_connect(s)
     s.layoutb = wibox.container.margin(s.mylayoutbox, dpi(8), dpi(11), dpi(3), dpi(3))
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons, {
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, _G.taglist_buttons, {
         font = theme.taglist_font,
         shape = gears.shape.rectangle,
         spacing = dpi(10),
@@ -449,7 +450,7 @@ function theme.at_screen_connect(s)
     }, nil, wibox.layout.fixed.vertical())
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.focused, awful.util.tasklist_buttons, { bg_focus = "#00000000" })
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.focused, _G.tasklist_buttons, { bg_focus = "#00000000" })
 
     -- Create the wibox
     s.mywibox = awful.wibar({ 
