@@ -12,10 +12,10 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
-local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local my_table = gears.table
 
 local theme                                     = {}
-theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
+theme.default_dir                               = gears.filesystem.get_themes_dir() .. "default"
 theme.dir                                       = "/usr/share/awesome/themes/rainbow"
 
 -- ============================================================================
@@ -82,6 +82,7 @@ theme.menu_submenu_icon                         = theme.dir .."/icons/submenu.pn
 theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
 theme.taglist_squares_unsel                     = theme.dir .. "/icons/square_unsel.png"
 theme.useless_gap                               = dpi(4)
+theme.separators_height                         = dpi(18)
 theme.layout_txt_tile                           = "[t]"
 theme.layout_txt_tileleft                       = "[l]"
 theme.layout_txt_tilebottom                     = "[b]"
@@ -266,7 +267,7 @@ function theme.at_screen_connect(s)
     -- ====================================================================
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+    awful.tag(_G.tagnames, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -283,10 +284,10 @@ function theme.at_screen_connect(s)
                            awful.button({}, 5, function() awful.layout.inc(-1) end)))
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, _G.taglist_buttons)
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, _G.tasklist_buttons)
 
     -- Create the wibox
     s.mywibox = awful.wibar({ 
