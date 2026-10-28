@@ -291,8 +291,8 @@ wificon:connect_signal("button::press", function() awful.spawn(string.format("%s
 -- Weather (ikon)
 local weathericon = wibox.widget.imagebox(theme.widget_weather) -- Használjuk a témában lévő ikonokat ha vannak
 
--- Launcher
-local mylauncher = awful.widget.button({image = theme.awesome_icon})
+-- Launcher (Modern imagebox replacement for deprecated awful.widget.button)
+local mylauncher = wibox.widget.imagebox(theme.awesome_icon)
 mylauncher:connect_signal("button::press", function() _G.mymainmenu:toggle() end)
 
 -- Separators

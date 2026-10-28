@@ -48,6 +48,8 @@ The default AwesomeWM keybindings apply, with the following custom additions:
 
 If you want to apply this configuration to an existing Arch-based system manually, follow these steps:
 
+**Note:** This configuration relies on custom Lua forks for Lua 5.5 and XLibre compatibility (`lua-json`, `awesome-retain`, `lain`). Ensure you have the compatible versions installed. The ISO includes all of these.
+
 1. Clone this repository:
    ```bash
    git clone https://github.com/megvadulthangya/awesome-copycats-manjaro.git
@@ -55,7 +57,7 @@ If you want to apply this configuration to an existing Arch-based system manuall
 
 2. Copy the main configuration to the system-wide Awesome directory:
    ```bash
-   sudo cp -rv awesome-copycats-manjaro/{configuration,modules,signals,themes,rc.lua} /etc/xdg/awesome/
+   sudo cp -rv awesome-copycats-manjaro/{configuration,modules,signals,themes,widgets,rc.lua} /etc/xdg/awesome/
    ```
 
 3. Copy the utility scripts from the `bin` directory to your local executable path and make them executable:
@@ -64,7 +66,7 @@ If you want to apply this configuration to an existing Arch-based system manuall
    sudo chmod +x /usr/local/bin/brightness-osd.sh /usr/local/bin/safe-lock.sh /usr/local/bin/volume-osd.sh
    ```
 
-4. Ensure all required system packages (terminal, browser, dunst, copyq, lua environment, etc.) are installed.
+4. Ensure all required system packages (terminal, browser, dunst, copyq, xorg-xrandr, etc.) are installed.
 
 **Changing Themes:**
 To switch themes, edit `/etc/xdg/awesome/rc.lua` and change the `themes` array index (1-10):

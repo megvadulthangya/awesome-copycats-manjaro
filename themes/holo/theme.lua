@@ -309,8 +309,8 @@ local net = lain.widget.net({
 local netbg = wibox.container.background(net.widget, theme.bg_focus, gears.shape.rectangle)
 local networkwidget = wibox.container.margin(netbg, dpi(0), dpi(0), dpi(5), dpi(5))
 
--- Launcher
-local mylauncher = awful.widget.button({ image = theme.awesome_icon_launcher })
+-- Launcher (Modern imagebox replacement for deprecated awful.widget.button)
+local mylauncher = wibox.widget.imagebox(theme.awesome_icon_launcher)
 mylauncher:connect_signal("button::press", function() _G.mymainmenu:toggle() end)
 
 -- Separators
