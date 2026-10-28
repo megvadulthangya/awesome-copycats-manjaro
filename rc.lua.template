@@ -1,6 +1,6 @@
 --[[
       Awesome WM configuration (Modularized & Fixed)
-	You can find all of the modules, in /etc/xdg/awesome
+    You can find all of the modules, in /etc/xdg/awesome
 --]]
 
 -- {{{ Required libraries
@@ -66,8 +66,8 @@ local chosen_theme = themes[7] -- Jelenleg: powerarrow-dark
 _G.modkey       = "Mod4"
 _G.altkey       = "Mod1"
 _G.terminal     = "tilix"
-_G.vi_focus     = false 
-_G.cycle_prev   = true  
+_G.vi_focus     = false
+_G.cycle_prev   = true
 _G.editor       = os.getenv("EDITOR") or "nano"
 _G.browser      = "brave"
 
@@ -114,6 +114,27 @@ beautiful.wallpaper = nil
 -- Időjárás widget csatlakoztatása a témához
 beautiful.weather_widget = weather_widget
 
+-- ===================================================================
+-- TAG PERSISTENCE (awesome-retain)
+-- ===================================================================
+-- FONTOS: itt kell betölteni — beautiful.init() UTÁN (hogy a téma
+-- már definiálta a beautiful.at_screen_connect-et, amit becsomagolunk),
+-- de a lenti screen connect loop ELŐTT (hogy a wrapper már éljen,
+-- mire a téma létrehozza a tag-eket).
+--
+-- A setup:
+--   1. felülírja a retain mentési útját ~/.config/awesome/tags.save-ra
+--   2. betölti a mentett tag-neveket + layoutokat
+--   3. becsomagolja a beautiful.at_screen_connect-et, hogy a téma a
+--      képernyőhöz tartozó mentett neveket lássa az awful.tag() hívásnál
+--   4. a téma után per-tag visszaállítja a mentett layoutokat
+--   5. ment exit / restart / screen-removed / 15s periodic esetén
+--
+-- Egyik témafájl sem módosul. A session-manager érintetlen.
+--
+-- Részletek: modules/tag-retain.lua
+require("modules.tag-retain").setup()
+
 -- }}}
 
 -- {{{ Menu
@@ -155,9 +176,11 @@ screen.connect_signal("arrange", function (s)
 end)
 
 -- Képernyők beállítása (Taglist, Tasklist, Wibar - ami a témából jön)
-awful.screen.connect_for_each_screen(function(s) 
-    -- Ez a függvény (ami a témában van) teszi ki a wibart és a téma hátterét
-    beautiful.at_screen_connect(s) 
+awful.screen.connect_for_each_screen(function(s)
+    -- Ez a függvény (ami a témában van) teszi ki a wibart és a téma hátterét.
+    -- A modules/tag-retain.lua által becsomagolt változat él,
+    -- így a téma a képernyőhöz tartozó mentett tag-neveket kapja.
+    beautiful.at_screen_connect(s)
 end)
 -- }}}
 
