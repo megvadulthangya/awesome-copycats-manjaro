@@ -109,5 +109,3 @@ local chosen_theme = themes[7] -- 7 is powerarrow-dark
 ---
 *Based on the original work by Luca CPZ, Veratil, and the AwesomeWM community. Maintained for the Manjaro Respin by megvadulthangya.*
 ```
-
-**Repo: `awesome-copycats-manjaro`**
