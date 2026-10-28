@@ -100,37 +100,18 @@ _G.editor       = os.getenv("EDITOR") or "nano"
 _G.browser      = "brave"
 
 -- ===================================================================
--- COMPAT SHIM-EK (régi témák miatt)
+-- MODERN GLOBÁLIS VÁLTOZÓK
 -- ===================================================================
--- A témafájlok (powerarrow, powerarrow-dark, holo, stb.) MÉG az
--- 'awful.util.*' táblából olvassák ezeket:
---   - awful.util.terminal          → a musicplr parancsban
---   - awful.util.tagnames          → az awful.tag() hívásban
---   - awful.util.taglist_buttons   → a taglist widgetben (KATTINTÁS!)
---   - awful.util.tasklist_buttons  → a tasklist widgetben (KATTINTÁS!)
---
--- Ha ezek nil-ek:
---   - a téma betöltése elhasal ("attempt to concatenate a nil value (field 'terminal')")
---   - vagy a taglist/tasklist NEM kap button handlert → kattintásra nem reagál!
---
--- Ezeket ELTÁVOLÍTHATJUK, miután minden téma át van írva _G.*-ra.
--- Addig viszont MUSZÁJ itt hagyni.
--- ===================================================================
+-- A témák már teljesen migrálva lettek _G.*-ra, így a régi 
+-- awful.util.* shimekre nincs többé szükség.
 
 -- Betöltjük a layout és tag beállításokat a külön fájlból
 local tags_config = require("configuration.tags")
 awful.layout.layouts = tags_config.layouts
 
--- Modern globális változók (új kód ezeket használja):
 _G.tagnames         = { "1", "2", "3", "4", "5" }
 _G.taglist_buttons  = tags_config.taglist_buttons
 _G.tasklist_buttons = tags_config.tasklist_buttons
-
--- Compat shimek (régi témák miatt):
-awful.util.terminal        = _G.terminal
-awful.util.tagnames        = _G.tagnames
-awful.util.taglist_buttons = _G.taglist_buttons
-awful.util.tasklist_buttons = _G.tasklist_buttons
 
 -- ===================================================================
 -- TÉMA BETÖLTÉSE
