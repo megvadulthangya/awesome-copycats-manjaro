@@ -10,7 +10,7 @@
 -- Design notes
 -- ------------
 -- * No theme file is modified. Every theme in this fork creates tags via
---   `awful.tag(awful.util.tagnames, s, layout)` inside its own
+--   `awful.tag(_G.tagnames, s, layout)` inside its own
 --   `beautiful.at_screen_connect(s)`. We wrap that function so the theme
 --   sees the per-screen retained names at call time, then we restore the
 --   static fallback afterwards.
@@ -96,7 +96,6 @@ function M.setup()
 
         local prev_tagnames = _G.tagnames or DEFAULT_TAGNAMES
         _G.tagnames         = names
-        awful.util.tagnames = names
 
         orig_at_screen_connect(s)
 
@@ -112,7 +111,6 @@ function M.setup()
         end
 
         _G.tagnames         = prev_tagnames
-        awful.util.tagnames = prev_tagnames
     end
 
     M._retain = retain
