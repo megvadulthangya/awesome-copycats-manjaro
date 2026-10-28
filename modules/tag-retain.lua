@@ -3,6 +3,15 @@
 -- Integrates the external "awesome-retain" module for per-user tag
 -- persistence (names + layouts) across reboots and awesome restarts.
 --
+-- Dependencies:
+--   * "retain"  — the awesome-retain Lua module
+--   * "json"    — the lua-json fork providing json.encode / json.decode
+--                 (module name must be "json", as retain requires it)
+--
+-- If either dependency is unavailable or fails at runtime, tag persistence
+-- is disabled for the current session and the WM falls back to the static
+-- _G.tagnames list. The WM itself never fails to start because of this.
+--
 -- Design notes
 -- ------------
 -- * No theme file is modified. Every theme in this fork creates tags via
@@ -14,12 +23,10 @@
 --   (via `tag.layout = ...`). Themes that create all tags with one layout
 --   get their per-tag layouts restored this way.
 -- * Save triggers: retain's own `connect_signals()` (exit + screen-removed),
---   plus `awesome::restart`, plus a 15s periodic timer for crash safety
---   (same pattern as session-manager).
+--   plus `awesome::restart`, plus a 15s periodic timer for crash safety.
 -- * The session-manager is NOT touched. This module only persists the tag
 --   list; window/app restore stays in session-manager.
--- * Save file lives in the per-user XDG config dir so it survives system
---   updates and never tries to write into root-owned /etc/xdg/awesome/.
+-- * Save file: ~/.config/awesome/tags.save
 
 local awful     = require("awful")
 local gears     = require("gears")
@@ -29,21 +36,24 @@ local naughty   = require("naughty")
 local M = {}
 
 -- Static fallback used when no saved data exists (fresh user, new monitor)
--- or when the saved list has been emptied (user deleted every tag). Matches
--- the original _G.tagnames in rc.lua so behaviour is unchanged pre-retain.
+-- or when the saved list has been emptied (user deleted every tag).
+-- Matches the original _G.tagnames in rc.lua so pre-retain behaviour is
+-- preserved when retain is unavailable.
 local DEFAULT_TAGNAMES = { "1", "2", "3", "4", "5" }
 
 function M.setup()
-    -- Load the external module. If its dependency (lua-json) is missing,
-    -- fail gracefully and keep the pre-retain behaviour.
+    -- Load the external module. A missing 'retain' or a missing/broken
+    -- 'json' dependency is caught here and falls back gracefully.
     local ok, retain = pcall(require, "retain")
     if not ok then
         naughty.notify({
             preset = naughty.config.presets.critical,
             title  = "awesome-retain",
-            text   = "Could not load the 'retain' module:\n" .. tostring(retain)
-                     .. "\n\nTag persistence is DISABLED.\n"
-                     .. "Install 'lua-json' (pacman -S lua-json) to enable it.",
+            text   = "Could not load the 'retain' module:\n"
+                     .. tostring(retain)
+                     .. "\n\nTag persistence is DISABLED for this session."
+                     .. "\n\nThe 'retain' module requires a working 'json'"
+                     .. " module (lua-json fork, require(\"json\")).",
         })
         return
     end
@@ -77,22 +87,38 @@ function M.setup()
     -- layout the active theme chose. We only *apply* saved layouts.
     retain.tags.defaults.names = DEFAULT_TAGNAMES
 
-    -- Load saved state into retain.tags._mytags / _loaded.
-    retain.tags.load()
+    -- Load saved state. Guarded: a runtime error in the json module (e.g.
+    -- a Lua 5.5 incompatibility in the fork) must not crash the WM.
+    local load_ok, load_err = pcall(retain.tags.load)
+    if not load_ok then
+        naughty.notify({
+            preset = naughty.config.presets.critical,
+            title  = "awesome-retain",
+            text   = "retain.tags.load() failed:\n"
+                     .. tostring(load_err)
+                     .. "\n\nTag persistence is DISABLED for this session."
+                     .. "\n\nThe 'json' module loaded but threw at runtime —"
+                     .. " check your lua-json fork.",
+        })
+        return
+    end
 
     -- Connect retain's own signals (exit + screen::removed).
-    retain.connect_signals()
+    pcall(retain.connect_signals)
 
-    -- Also save on awesome restart (Mod4+Ctrl+r). Redundant with 'exit'
-    -- for restart specifically, but harmless and explicit.
-    awesome.connect_signal("restart", retain.tags.save_all)
+    -- Also save on awesome restart (Mod4+Ctrl+r). Guarded so a json runtime
+    -- error during save cannot prevent awesome from restarting.
+    awesome.connect_signal("restart", function()
+        pcall(retain.tags.save_all)
+    end)
 
     -- Periodic save for crash safety (same pattern as session-manager).
     -- 15s is plenty for a tiny JSON file; a hard crash loses at most 15s.
+    -- Guarded so a json runtime error cannot break the timer loop.
     M._timer = gears.timer {
         timeout   = 15,
         autostart = true,
-        callback  = function() retain.tags.save_all() end,
+        callback  = function() pcall(retain.tags.save_all) end,
     }
 
     -- Stop the periodic timer as soon as awesome is about to exit so it
