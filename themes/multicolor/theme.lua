@@ -13,7 +13,7 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
-local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local my_table = gears.table
 
 local theme = {}
 
@@ -95,6 +95,7 @@ theme.taglist_squares_unsel = theme.confdir .. "/icons/square_b.png"
 theme.tasklist_plain_task_name = true
 theme.tasklist_disable_icon = true
 theme.useless_gap = 0
+theme.separators_height = dpi(18)
 
 -- Layout icons (paths remain the same)
 theme.layout_tile = theme.confdir .. "/icons/tile.png"
@@ -271,7 +272,7 @@ local weathericon = wibox.widget.imagebox(theme.widget_weather)
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    s.quake = lain.util.quake({ app = _G.terminal })
 
     -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
     local wallpaper = beautiful.wallpaper 
@@ -283,7 +284,7 @@ function theme.at_screen_connect(s)
     end
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+    awful.tag(_G.tagnames, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -298,10 +299,10 @@ function theme.at_screen_connect(s)
     ))
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, _G.taglist_buttons)
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, _G.tasklist_buttons)
 
     -- Create the top wibox
     s.mywibox = awful.wibar({

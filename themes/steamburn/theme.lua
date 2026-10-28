@@ -14,10 +14,10 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local os = os
-local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local my_table = gears.table
 
 local theme                                     = {}
-theme.zenburn_dir                               = require("awful.util").get_themes_dir() .. "zenburn"
+theme.zenburn_dir                               = gears.filesystem.get_themes_dir() .. "zenburn"
 theme.dir                                       = "/usr/share/awesome/themes/steamburn"
 
 -- ============================================================================
@@ -80,6 +80,7 @@ theme.layout_txt_floating                       = "[|]"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.useless_gap                               = 0 -- RÉS NÉLKÜL
+theme.separators_height                         = dpi(18)
 theme.titlebar_close_button_normal              = theme.zenburn_dir.."/titlebar/close_normal.png"
 theme.titlebar_close_button_focus               = theme.zenburn_dir.."/titlebar/close_focus.png"
 theme.titlebar_minimize_button_normal           = theme.zenburn_dir.."/titlebar/minimize_normal.png"
@@ -210,7 +211,7 @@ local function update_txt_layoutbox(s)
 end
 
 function theme.at_screen_connect(s)
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    s.quake = lain.util.quake({ app = _G.terminal })
 
     -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
     local wallpaper = beautiful.wallpaper 
@@ -231,7 +232,7 @@ function theme.at_screen_connect(s)
     -- ====================================================================
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+    awful.tag(_G.tagnames, s, awful.layout.layouts[1])
 
     s.mypromptbox = awful.widget.prompt()
 
@@ -245,8 +246,8 @@ function theme.at_screen_connect(s)
                            awful.button({}, 4, function() awful.layout.inc(1) end),
                            awful.button({}, 5, function() awful.layout.inc(-1) end)))
 
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, _G.taglist_buttons)
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, _G.tasklist_buttons)
 
     -- Create the wibox with Nord background
     s.mywibox = awful.wibar({ 

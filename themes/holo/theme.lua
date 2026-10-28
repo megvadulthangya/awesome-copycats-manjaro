@@ -15,10 +15,10 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local string, os = string, os
-local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local my_table = gears.table
 
 local theme                                     = {}
-theme.default_dir                               = require("awful.util").get_themes_dir() .. "default"
+theme.default_dir                               = gears.filesystem.get_themes_dir() .. "default"
 theme.icon_dir                                  = "/usr/share/awesome/themes/holo/icons"
 
 -- ============================================================================
@@ -108,6 +108,7 @@ theme.layout_floating                           = theme.icon_dir .. "/floating.p
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.useless_gap                               = dpi(4)
+theme.separators_height                         = dpi(18)
 theme.titlebar_close_button_normal              = theme.default_dir.."/titlebar/close_normal.png"
 theme.titlebar_close_button_focus               = theme.default_dir.."/titlebar/close_focus.png"
 theme.titlebar_minimize_button_normal           = theme.default_dir.."/titlebar/minimize_normal.png"
@@ -129,7 +130,7 @@ theme.titlebar_maximized_button_focus_inactive  = theme.default_dir.."/titlebar/
 theme.titlebar_maximized_button_normal_active   = theme.default_dir.."/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active    = theme.default_dir.."/titlebar/maximized_focus_active.png"
 
-theme.musicplr = string.format("%s -e ncmpcpp", awful.util.terminal)
+theme.musicplr = string.format("%s -e ncmpcpp", _G.terminal)
 
 local markup = lain.util.markup
 local blue   = theme.nord8  -- Changed from #80CCE6 to nord8
@@ -310,7 +311,7 @@ local networkwidget = wibox.container.margin(netbg, dpi(0), dpi(0), dpi(5), dpi(
 
 -- Launcher
 local mylauncher = awful.widget.button({ image = theme.awesome_icon_launcher })
-mylauncher:connect_signal("button::press", function() awful.util.mymainmenu:toggle() end)
+mylauncher:connect_signal("button::press", function() _G.mymainmenu:toggle() end)
 
 -- Separators
 local first = wibox.widget.textbox('<span font="Roboto 7"> </span>')
@@ -331,7 +332,7 @@ local barcolor  = gears.color({
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    s.quake = lain.util.quake({ app = _G.terminal })
 
     -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
     -- Csak akkor állítunk be háttérképet, ha a 'theme.wallpaper' 
@@ -345,7 +346,7 @@ function theme.at_screen_connect(s)
     end
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+    awful.tag(_G.tagnames, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -359,13 +360,13 @@ function theme.at_screen_connect(s)
                            awful.button({}, 4, function () awful.layout.inc( 1) end),
                            awful.button({}, 5, function () awful.layout.inc(-1) end)))
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons, { bg_focus = barcolor })
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, _G.taglist_buttons, { bg_focus = barcolor })
 
     mytaglistcont = wibox.container.background(s.mytaglist, theme.bg_focus, gears.shape.rectangle)
     s.mytag = wibox.container.margin(mytaglistcont, dpi(0), dpi(0), dpi(5), dpi(5))
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons, { bg_focus = theme.bg_focus, shape = gears.shape.rectangle, shape_border_width = 5, shape_border_color = theme.tasklist_bg_normal, align = "center" })
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, _G.tasklist_buttons, { bg_focus = theme.bg_focus, shape = gears.shape.rectangle, shape_border_width = 5, shape_border_color = theme.tasklist_bg_normal, align = "center" })
 
     -- =====================================================================
     -- WEATHER WIDGET (Holo Stílusú Csomagolás)

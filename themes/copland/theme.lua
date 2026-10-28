@@ -14,7 +14,7 @@ local dpi   = require("beautiful.xresources").apply_dpi
 local beautiful = require("beautiful") -- Szükséges a weather és a global wallpaper eléréséhez
 
 local awesome, client, os = awesome, client, os
-local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
+local my_table = gears.table
 
 local theme                                     = {}
 theme.dir                                       = "/usr/share/awesome/themes/copland"
@@ -77,6 +77,7 @@ theme.layout_fullscreen                         = theme.dir .. "/icons/fullscree
 theme.layout_magnifier                          = theme.dir .. "/icons/magnifier.png"
 theme.layout_floating                           = theme.dir .. "/icons/floating.png"
 theme.useless_gap                               = 0
+theme.separators_height                         = dpi(18)
 theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"
 theme.titlebar_ontop_button_focus_active        = theme.dir .. "/icons/titlebar/ontop_focus_active.png"
@@ -242,7 +243,7 @@ theme.volume = lain.widget.alsabar {
 theme.volume.tooltip.wibox.fg = theme.fg_focus
 theme.volume.bar:buttons(my_table.join (
           awful.button({}, 1, function()
-            awful.spawn(string.format("%s -e alsamixer", awful.util.terminal))
+            awful.spawn(string.format("%s -e alsamixer", _G.terminal))
           end),
           awful.button({}, 2, function()
             os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
@@ -304,7 +305,7 @@ end
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = awful.util.terminal })
+    s.quake = lain.util.quake({ app = _G.terminal })
 
     -- OKOS HÁTTÉRKÉP BEÁLLÍTÁS
     -- Megnézi a globális 'beautiful.wallpaper' változót.
@@ -319,7 +320,7 @@ function theme.at_screen_connect(s)
     end
 
     -- Tags
-    awful.tag(awful.util.tagnames, s, awful.layout.layouts[1])
+    awful.tag(_G.tagnames, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -334,10 +335,10 @@ function theme.at_screen_connect(s)
                            awful.button({}, 5, function () awful.layout.inc(-1) end)))
 
     -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, awful.util.taglist_buttons)
+    s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.all, _G.taglist_buttons)
 
     -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, awful.util.tasklist_buttons)
+    s.mytasklist = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, _G.tasklist_buttons)
 
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s, height = dpi(18), bg = theme.bg_normal, fg = theme.fg_normal })
